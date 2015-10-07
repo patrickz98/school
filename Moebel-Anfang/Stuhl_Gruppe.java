@@ -1,42 +1,55 @@
 import java.awt.Shape;
 import java.awt.geom.*;
 import java.util.*;
-import java.lang.Math;
+import java.lang.Math.*;
 
 /**
  * Beschreiben Sie hier die Klasse Schrankwand.
- * 
- * @author (Ihr Name) 
- * @version (eine Versionsnummer oder ein Datum)
+ *
+ * @author Patrick Zierahn
  */
 public class Stuhl_Gruppe extends Moebel
 {
     private Tisch tisch;
     private ArrayList stuehle;
-    
+    private int anzahl_stuele;
+
+    // public Stuhl stuehl_positon()
+    // {
+    //
+    // }
+
     /**
      * Konstruktor für Objekte der Klasse Schrankwand
      */
-    public Stuhl_Gruppe(int anzahl_stuele)
+    public Stuhl_Gruppe(int imput_stuele)
     {
-        double pi = Math.PI;
-        int range = pi * 100 * 2;
-        
-        
-        farbe = "rot";
-        
-        
-        // koordinaten fuer die Stuele
+        super.farbe = "rot";
+        anzahl_stuele = imput_stuele;
+
+        int d = 200;
+        int x = (int) d / anzahl_stuele;
+        int x_posi = 0;
+        int tmp_y;
+
         stuehle = new ArrayList();
-        stuehle.add( new Stuhl(0, 100, farbe) );
-        stuehle.add( new Stuhl(100, 0, farbe) );
-        stuehle.add( new Stuhl(100, 200, farbe) );
-        stuehle.add( new Stuhl(200, 100, farbe) );
-        
+
+        // koordinaten fuer die Stuele
+        for (int y = 0; y < anzahl_stuele; y++)
+        {
+            // double quadratwurzel = Math.sqrt(2 * d * x - x ^ 2);
+            tmp_y = (int) Math.sqrt(d * x_posi - Math.pow(x_posi, 2));
+
+            System.out.println("x-orgi: " + x + " x: " + x_posi + " y: " + tmp_y);
+
+            stuehle.add( new Stuhl(x_posi, (tmp_y * -1) + 100, farbe) );
+            x_posi += x;
+        }
+
         // Tisch fuer die Stuhl-Gruppe
         tisch = new Tisch(75, 75, 100, farbe);
     }
-    
+
     /**
     * Berechnet das zu zeichnende Shape anhand der gegebenen Daten
     */
@@ -46,14 +59,14 @@ public class Stuhl_Gruppe extends Moebel
 
         // hinzufuegen des Tisches
         schrankwand.append(tisch.gibAktuelleFigur(), false);
-        
+
         // hinzufuergen der Stuehle
-        for (int x = 0; x < 4; x++)
+        for (int x = 0; x < anzahl_stuele; x++)
         {
-            // datenabruf aus stuehle[] array
+            // datenabruf aus dem stuehle array
             schrankwand.append(((Stuhl) stuehle.get(x)).gibAktuelleFigur(), false);
         }
-        
+
         // rueckgabe der Stuhl-Gruppe als ein obj.
         return transformiere(schrankwand);
     }
