@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Tisch()
+comment0.text=\n\ Erzeuge\ einen\ neuen\ Stuhl\ mit\ einer\ Standardfarbe\ und\ Standardgroesse\n\ an\ einer\ Standardposition.\ (Standardkonstruktor)\n
+comment1.params=x\ y\ diameter\ color
+comment1.target=Tisch(int,\ int,\ int,\ java.lang.String)
+comment1.text=\n\ Erzeuge\ einen\ neuen\ Stuhl\ mit\ einer\ Standardfarbe\ und\ Standardgroesse\n\ an\ einer\ Standardposition.\ (Standardkonstruktor)\n
+comment2.params=
+comment2.target=java.awt.Shape\ gibAktuelleFigur()
+comment2.text=\n\ Berechnet\ das\ zu\ zeichnende\ Shape\ anhand\ der\ gegebenen\ Daten\n\ [\ Zum\ Anzeigen\ der\ Attributwerte\ \uFFFDber\ Inspect\ muss\ hier\ die\ Sichtbarkeit\ \n\ \ auf\ public\ gesetzt\ werden.\ ]\n
+numComments=3

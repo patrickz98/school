@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Schrankwand()
+comment0.text=\n\ Konstruktor\ f\u00FCr\ Objekte\ der\ Klasse\ Schrankwand\n
+comment1.params=
+comment1.target=java.awt.Shape\ gibAktuelleFigur()
+comment1.text=\n\ Berechnet\ das\ zu\ zeichnende\ Shape\ anhand\ der\ gegebenen\ Daten\n
+numComments=2
