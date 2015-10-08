@@ -1,8 +1,10 @@
 #BlueJ class context
-comment0.params=anzahl_stuele
-comment0.target=Stuhl_Gruppe(int)
-comment0.text=\n\ Konstruktor\ f\u00FCr\ Objekte\ der\ Klasse\ Schrankwand\n
-comment1.params=
-comment1.target=java.awt.Shape\ gibAktuelleFigur()
-comment1.text=\n\ Berechnet\ das\ zu\ zeichnende\ Shape\ anhand\ der\ gegebenen\ Daten\n
-numComments=2
+comment0.params=anzahl_stuele\ up_down
+comment0.target=void\ stuehl_positon(int,\ boolean)
+comment1.params=input_stuele
+comment1.target=Stuhl_Gruppe(int)
+comment1.text=\n\ Konstruktor\ f\u00FCr\ Objekte\ der\ Klasse\ Schrankwand\n
+comment2.params=
+comment2.target=java.awt.Shape\ gibAktuelleFigur()
+comment2.text=\n\ Berechnet\ das\ zu\ zeichnende\ Shape\ anhand\ der\ gegebenen\ Daten\n
+numComments=3

@@ -14,36 +14,58 @@ public class Stuhl_Gruppe extends Moebel
     private ArrayList stuehle;
     private int anzahl_stuele;
 
-    // public Stuhl stuehl_positon()
-    // {
-    //
-    // }
+    /**
+     * Funktion die die Stuehle im Kreis anordnet
+     */
+    public void stuehl_circle(int anzahl_stuele, boolean up_down)
+    {
+        int d = 200;
+        int x_intervall = (int) d / anzahl_stuele;
+
+        int x;
+        int y;
+        int displacement;
+
+        if (up_down)
+        {
+            x = 0;
+            displacement = -1;
+        }
+        else
+        {
+            x = x_intervall;
+            displacement = 1;
+        }
+
+        for (int z = 0; z < anzahl_stuele; z++)
+        {
+            y = (int) Math.sqrt(d * x - Math.pow(x, 2));
+
+            stuehle.add( new Stuhl(x, (y * displacement) + 100, farbe) );
+            x += x_intervall;
+        }
+    }
 
     /**
      * Konstruktor für Objekte der Klasse Schrankwand
      */
-    public Stuhl_Gruppe(int imput_stuele)
+    public Stuhl_Gruppe(int input_stuele)
     {
         super.farbe = "rot";
-        anzahl_stuele = imput_stuele;
-
-        int d = 200;
-        int x = (int) d / anzahl_stuele;
-        int x_posi = 0;
-        int tmp_y;
+        anzahl_stuele = input_stuele;
 
         stuehle = new ArrayList();
 
         // koordinaten fuer die Stuele
-        for (int y = 0; y < anzahl_stuele; y++)
+        if (input_stuele % 2 == 0)
         {
-            // double quadratwurzel = Math.sqrt(2 * d * x - x ^ 2);
-            tmp_y = (int) Math.sqrt(d * x_posi - Math.pow(x_posi, 2));
-
-            System.out.println("x-orgi: " + x + " x: " + x_posi + " y: " + tmp_y);
-
-            stuehle.add( new Stuhl(x_posi, (tmp_y * -1) + 100, farbe) );
-            x_posi += x;
+            stuehl_circle(input_stuele / 2, true);
+            stuehl_circle(input_stuele / 2, false);
+        }
+        else
+        {
+            stuehl_circle((input_stuele - 1) / 2 + 1, true);
+            stuehl_circle((input_stuele - 1) / 2,     false);
         }
 
         // Tisch fuer die Stuhl-Gruppe
