@@ -35,12 +35,12 @@ public class couch extends Moebel
      */
     public Shape gibAktuelleFigur() {
         // einen GeneralPath definieren
-        GeneralPath stuhl = new GeneralPath();
-        stuhl.moveTo(0 , 0);
-        stuhl.lineTo(breite, 0);
-        stuhl.lineTo(0, breite);
-        stuhl.lineTo(0 , 0);
+        GeneralPath couch = new GeneralPath();
+        couch.moveTo(0 , 0);
+        couch.lineTo(breite, 0);
+        couch.lineTo(0, breite);
+        couch.lineTo(0 , 0);
         
-        return transformiere(stuhl);
+        return transformiere(couch);
     }
 }

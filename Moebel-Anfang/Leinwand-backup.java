@@ -14,10 +14,6 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
 /**
  * Leinwand ist eine Klasse, die einfache Zeichenoperationen auf einer
  * leinwandartigen Zeichenfl�che erm�glicht.
@@ -36,7 +32,7 @@ import java.io.*;
  *
  * @version: 1.7 (5.12.2003)
  */
-public class Leinwand implements MouseMotionListener, MouseListener
+public class Leinwand
 {
   // Hinweis: Die Implementierung dieser Klasse (insbesondere die
   // Verwaltung der Farben und Identit�ten der Figuren) ist etwas
@@ -58,7 +54,7 @@ public class Leinwand implements MouseMotionListener, MouseListener
     if (leinwandSingleton == null)
     {
       leinwandSingleton =
-        new Leinwand("M�belprojekt Grafik", 600, 600, Color.white);
+        new Leinwand("Moebelprojekt Grafik", 600, 600, Color.white);
     }
     leinwandSingleton.setzeSichtbarkeit(true);
     return leinwandSingleton;
@@ -84,10 +80,6 @@ public class Leinwand implements MouseMotionListener, MouseListener
   private Leinwand(String titel, int breite, int hoehe, Color grundfarbe)
   {
     fenster = new JFrame();
-    
-    fenster.addMouseMotionListener(this);
-    fenster.addMouseListener(this);
-    
     zeichenflaeche = new Zeichenflaeche();
     fenster.setContentPane(zeichenflaeche);
     fenster.setTitle(titel);
@@ -97,26 +89,9 @@ public class Leinwand implements MouseMotionListener, MouseListener
     figuren = new ArrayList();
     figurZuShape = new HashMap();
 
-  }
+}
 
-      
-    public void mouseClicked(MouseEvent e)
-    {
-        System.out.println("Clicked");
-    }
-    
-    public void mouseDragged(MouseEvent e) {}
-      
-    public void mouseEntered(MouseEvent e) {}
-      
-    public void mouseExited(MouseEvent e) {}
 
-    public void mouseMoved(MouseEvent e) {}
-   
-    public void mousePressed(MouseEvent e) {}
-   
-    public void mouseReleased(MouseEvent e) {}
-  
   /**
    * Setze, ob diese Leinwand sichtbar sein soll oder nicht. Wenn die
    * Leinwand sichtbar gemacht wird, wird ihr Fenster in den
