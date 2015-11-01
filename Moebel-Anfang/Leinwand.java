@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 
 import java.awt.*;
 import java.awt.event.*;
-
+import java.awt.geom.*;
 import java.io.*;
 /**
  * Leinwand ist eine Klasse, die einfache Zeichenoperationen auf einer
@@ -58,7 +58,7 @@ public class Leinwand implements MouseMotionListener, MouseListener
     if (leinwandSingleton == null)
     {
       leinwandSingleton =
-        new Leinwand("M�belprojekt Grafik", 600, 600, Color.white);
+        new Leinwand("Moebelprojekt Grafik", 600, 600, Color.white);
     }
     leinwandSingleton.setzeSichtbarkeit(true);
     return leinwandSingleton;
@@ -72,7 +72,7 @@ public class Leinwand implements MouseMotionListener, MouseListener
   private Color hintergrundfarbe;
   private Image leinwandImage;
   private List figuren;
-  private Map figurZuShape; // Abbildung von Figuren zu Shapes
+  private Map<Object, ShapeMitFarbe> figurZuShape; // Abbildung von Figuren zu Shapes
 
   /**
    * Erzeuge eine Leinwand.
@@ -85,6 +85,7 @@ public class Leinwand implements MouseMotionListener, MouseListener
   {
     fenster = new JFrame();
     
+    // mouse-event listener fuer JFrame --> fenster
     fenster.addMouseMotionListener(this);
     fenster.addMouseListener(this);
     
@@ -99,22 +100,42 @@ public class Leinwand implements MouseMotionListener, MouseListener
 
   }
 
-      
+    @Override
     public void mouseClicked(MouseEvent e)
     {
-        System.out.println("Clicked");
+        System.out.println("Clicked --> x: " + e.getX() + " y: " + e.getY());
+
+        for (Object myShape: figurZuShape.keySet())
+        {
+            if (((ShapeMitFarbe) figurZuShape.get(myShape)).ShapeMitFarbe_contains(e.getX(), e.getY()))
+            {
+                System.out.println("True");
+            }
+            
+            // Recherche
+            System.out.println(myShape);
+            System.out.println(myShape.getClass());
+            System.out.println(figurZuShape.get(myShape));
+            System.out.println(figurZuShape.get(myShape).getClass());
+        }
     }
     
+    @Override
     public void mouseDragged(MouseEvent e) {}
-      
+    
+    @Override
     public void mouseEntered(MouseEvent e) {}
-      
+    
+    @Override
     public void mouseExited(MouseEvent e) {}
-
+    
+    @Override
     public void mouseMoved(MouseEvent e) {}
-   
+    
+    @Override
     public void mousePressed(MouseEvent e) {}
-   
+    
+    @Override
     public void mouseReleased(MouseEvent e) {}
   
   /**
@@ -272,6 +293,12 @@ public class Leinwand implements MouseMotionListener, MouseListener
     {
       setzeZeichenfarbe(farbe);
       graphic.draw(shape);
+    }
+    
+    // funktion die ueberprueft ob das mouse-event im Shape inhalten ist
+    public boolean ShapeMitFarbe_contains(int x, int y)
+    {
+        return shape.contains(x, y);
     }
   }
 
