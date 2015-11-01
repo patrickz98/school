@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.io.*;
+import java.awt.geom.Point2D;
 /**
  * Leinwand ist eine Klasse, die einfache Zeichenoperationen auf einer
  * leinwandartigen Zeichenfl�che erm�glicht.
@@ -84,11 +85,11 @@ public class Leinwand implements MouseMotionListener, MouseListener
   private Leinwand(String titel, int breite, int hoehe, Color grundfarbe)
   {
     fenster = new JFrame();
-    
+
     // mouse-event listener fuer JFrame --> fenster
     fenster.addMouseMotionListener(this);
     fenster.addMouseListener(this);
-    
+
     zeichenflaeche = new Zeichenflaeche();
     fenster.setContentPane(zeichenflaeche);
     fenster.setTitle(titel);
@@ -103,41 +104,96 @@ public class Leinwand implements MouseMotionListener, MouseListener
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        System.out.println("Clicked --> x: " + e.getX() + " y: " + e.getY());
+        // System.out.println("Clicked --> x: " + e.getX() + " y: " + e.getY());
+        //
+        // for (Object myShape: figurZuShape.keySet())
+        // {
+        //     if (((ShapeMitFarbe) figurZuShape.get(myShape)).ShapeMitFarbe_contains(e.getX(), e.getY()))
+        //     {
+        //         System.out.println("True");
+        //     }
+        //
+        //     // Recherche
+        //     System.out.println(myShape);
+        //     System.out.println(myShape.getClass());
+        //     System.out.println(figurZuShape.get(myShape));
+        //     System.out.println(figurZuShape.get(myShape).getClass());
+        // }
+    }
+    int lastOffsetX;
+    int lastOffsetY;
+
+    @Override
+    public void mouseDragged(MouseEvent e)
+    {
+        System.out.printf("Clicked --> x: %d y: %d\n", e.getX(), e.getY());
 
         for (Object myShape: figurZuShape.keySet())
         {
             if (((ShapeMitFarbe) figurZuShape.get(myShape)).ShapeMitFarbe_contains(e.getX(), e.getY()))
             {
                 System.out.println("True");
+
+                for (Object obj: figuren)
+                {
+                    if (obj == myShape)
+                    {
+                        System.out.println("Super True");
+
+                        int newX = e.getX() - lastOffsetX;
+            			int newY = e.getY() - lastOffsetY;
+
+            			lastOffsetX += newX;
+            			lastOffsetY += newY;
+
+                        AffineTransform t = new AffineTransform();
+
+                        Rectangle2D umriss = ((ShapeMitFarbe) figurZuShape.get(myShape)).Shape_getBounds2D();
+
+                        t.translate( newX, newY);
+
+                        AffineTransform translate = AffineTransform.getTranslateInstance(e.getX(), e.getY());
+
+                        t.rotate(Math.toRadians(0),
+                        umriss.getX() + umriss.getWidth()/2,
+                        umriss.getY() + umriss.getHeight()/2);
+
+                        Shape obj_2 = t.createTransformedShape(((ShapeMitFarbe) figurZuShape.get(myShape)).return_self());
+
+                        entferne(obj);
+                        zeichne(myShape, "rot", obj_2);
+                    }
+                }
+                zeichenflaeche.repaint();
             }
-            
+
             // Recherche
-            System.out.println(myShape);
-            System.out.println(myShape.getClass());
-            System.out.println(figurZuShape.get(myShape));
-            System.out.println(figurZuShape.get(myShape).getClass());
+            // System.out.println(myShape);
+            // System.out.println(myShape.getClass());
+            // System.out.println(figurZuShape.get(myShape));
+            // System.out.println(figurZuShape.get(myShape).getClass());
         }
     }
-    
-    @Override
-    public void mouseDragged(MouseEvent e) {}
-    
+
     @Override
     public void mouseEntered(MouseEvent e) {}
-    
+
     @Override
     public void mouseExited(MouseEvent e) {}
-    
+
     @Override
     public void mouseMoved(MouseEvent e) {}
-    
+
     @Override
-    public void mousePressed(MouseEvent e) {}
-    
+    public void mousePressed(MouseEvent e)
+    {
+        lastOffsetX = e.getX();
+        lastOffsetY = e.getY();
+    }
+
     @Override
     public void mouseReleased(MouseEvent e) {}
-  
+
   /**
    * Setze, ob diese Leinwand sichtbar sein soll oder nicht. Wenn die
    * Leinwand sichtbar gemacht wird, wird ihr Fenster in den
@@ -294,11 +350,21 @@ public class Leinwand implements MouseMotionListener, MouseListener
       setzeZeichenfarbe(farbe);
       graphic.draw(shape);
     }
-    
+
     // funktion die ueberprueft ob das mouse-event im Shape inhalten ist
     public boolean ShapeMitFarbe_contains(int x, int y)
     {
         return shape.contains(x, y);
+    }
+
+    public Rectangle2D Shape_getBounds2D()
+    {
+        return shape.getBounds2D();
+    }
+
+    public Shape return_self()
+    {
+        return shape;
     }
   }
 
