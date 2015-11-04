@@ -72,7 +72,7 @@ public class Leinwand implements MouseMotionListener, MouseListener
   private Graphics2D graphic;
   private Color hintergrundfarbe;
   private Image leinwandImage;
-  private List figuren;
+  private List<Object> figuren;
   private Map<Object, ShapeMitFarbe> figurZuShape; // Abbildung von Figuren zu Shapes
 
   /**
@@ -102,66 +102,44 @@ public class Leinwand implements MouseMotionListener, MouseListener
   }
 
     @Override
-    public void mouseClicked(MouseEvent e)
-    {
-        // System.out.println("Clicked --> x: " + e.getX() + " y: " + e.getY());
-        //
-        // for (Object myShape: figurZuShape.keySet())
-        // {
-        //     if (((ShapeMitFarbe) figurZuShape.get(myShape)).ShapeMitFarbe_contains(e.getX(), e.getY()))
-        //     {
-        //         System.out.println("True");
-        //     }
-        //
-        //     // Recherche
-        //     System.out.println(myShape);
-        //     System.out.println(myShape.getClass());
-        //     System.out.println(figurZuShape.get(myShape));
-        //     System.out.println(figurZuShape.get(myShape).getClass());
-        // }
-    }
-    int lastOffsetX;
-    int lastOffsetY;
+    public void mouseClicked(MouseEvent e) {}
+    
+    private int lastOffsetX;
+    private int lastOffsetY;
 
     @Override
     public void mouseDragged(MouseEvent e)
     {
-        System.out.printf("Clicked --> x: %d y: %d\n", e.getX(), e.getY());
+        //System.out.printf("Clicked --> x: %d y: %d\n", e.getX(), e.getY());
 
-        for (Object myShape: figurZuShape.keySet())
+        for (Object shape: figurZuShape.keySet())
         {
-            if (((ShapeMitFarbe) figurZuShape.get(myShape)).ShapeMitFarbe_contains(e.getX(), e.getY()))
+            if (((ShapeMitFarbe) figurZuShape.get(shape)).self_contains(e.getX(), e.getY()))
             {
-                System.out.println("True");
-
                 for (Object obj: figuren)
                 {
-                    if (obj == myShape)
+                    if (obj == shape)
                     {
-                        System.out.println("Super True");
-
                         int newX = e.getX() - lastOffsetX;
-            			int newY = e.getY() - lastOffsetY;
+                        int newY = e.getY() - lastOffsetY;
 
-            			lastOffsetX += newX;
-            			lastOffsetY += newY;
+                        lastOffsetX += newX;
+                        lastOffsetY += newY;
 
                         AffineTransform t = new AffineTransform();
 
-                        Rectangle2D umriss = ((ShapeMitFarbe) figurZuShape.get(myShape)).Shape_getBounds2D();
+                        Rectangle2D umriss = ((ShapeMitFarbe) figurZuShape.get(shape)).Shape_getBounds2D();
 
                         t.translate( newX, newY);
 
-                        AffineTransform translate = AffineTransform.getTranslateInstance(e.getX(), e.getY());
-
                         t.rotate(Math.toRadians(0),
-                        umriss.getX() + umriss.getWidth()/2,
-                        umriss.getY() + umriss.getHeight()/2);
+                            umriss.getX() + umriss.getWidth()/2,
+                            umriss.getY() + umriss.getHeight()/2);
 
-                        Shape obj_2 = t.createTransformedShape(((ShapeMitFarbe) figurZuShape.get(myShape)).return_self());
+                        Shape obj_2 = t.createTransformedShape(((ShapeMitFarbe) figurZuShape.get(shape)).return_self());
 
                         entferne(obj);
-                        zeichne(myShape, "rot", obj_2);
+                        zeichne(shape, "rot", obj_2);
                     }
                 }
                 zeichenflaeche.repaint();
@@ -352,7 +330,7 @@ public class Leinwand implements MouseMotionListener, MouseListener
     }
 
     // funktion die ueberprueft ob das mouse-event im Shape inhalten ist
-    public boolean ShapeMitFarbe_contains(int x, int y)
+    public boolean self_contains(int x, int y)
     {
         return shape.contains(x, y);
     }

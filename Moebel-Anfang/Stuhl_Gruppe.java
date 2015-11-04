@@ -11,37 +11,47 @@ import java.lang.Math.*;
 public class Stuhl_Gruppe extends Moebel
 {
     private Tisch tisch;
-    private ArrayList stuehle;
+    private ArrayList<Stuhl> stuehle;
     private int anzahl_stuele;
 
     /**
      * Funktion die die Stuehle im Kreis anordnet
      */
-    public void stuehl_circle(int anzahl_stuele, boolean up_down)
+    public void stuhl_kreis(int anzahl_stuele, boolean up_down)
     {
+        // Durchmesser des Tisches
         int d = 200;
+        
+        // Intervall der Stuehle auf der x-Achse
         int x_intervall = (int) d / anzahl_stuele;
 
-        int x;
-        int y;
-        int displacement;
+        // Kordinaten fuer die Stuehle
+        int x, y;
+        
+        // Es kann nur ein Halbkreis modelliert werden. (Oben/Unten)
+        int placement;
 
+        // Einstellung der Position
         if (up_down)
         {
+            // Unten
             x = 0;
-            displacement = -1;
+            placement = -1;
         }
         else
         {
+            // Oben
             x = x_intervall;
-            displacement = 1;
+            placement = 1;
         }
 
+        // Erstellung der Stuehle
         for (int z = 0; z < anzahl_stuele; z++)
         {
+            // funktion zu y berechnung auf Basis eines Halbkreises
             y = (int) Math.sqrt(d * x - Math.pow(x, 2));
 
-            stuehle.add( new Stuhl(x, (y * displacement) + 100, farbe) );
+            stuehle.add( new Stuhl(x, (y * placement) + 100, farbe) );
             x += x_intervall;
         }
     }
@@ -54,18 +64,19 @@ public class Stuhl_Gruppe extends Moebel
         super.farbe = "rot";
         anzahl_stuele = input_stuele;
 
-        stuehle = new ArrayList();
+        stuehle = new ArrayList<Stuhl>();
 
-        // koordinaten fuer die Stuele
+        // koordinaten fuer die Stuele.
+        // Ungerade- / Geradezahl
         if (input_stuele % 2 == 0)
         {
-            stuehl_circle(input_stuele / 2, true);
-            stuehl_circle(input_stuele / 2, false);
+            stuhl_kreis(input_stuele / 2, true);
+            stuhl_kreis(input_stuele / 2, false);
         }
         else
         {
-            stuehl_circle((input_stuele - 1) / 2 + 1, true);
-            stuehl_circle((input_stuele - 1) / 2,     false);
+            stuhl_kreis((input_stuele - 1) / 2 + 1, true);
+            stuhl_kreis((input_stuele - 1) / 2,     false);
         }
 
         // Tisch fuer die Stuhl-Gruppe

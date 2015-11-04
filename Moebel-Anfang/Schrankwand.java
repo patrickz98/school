@@ -1,6 +1,7 @@
 import java.awt.Shape;
 import java.awt.geom.*;
 
+import java.util.*;
 /**
  * Beschreiben Sie hier die Klasse Schrankwand.
  * 
@@ -9,9 +10,8 @@ import java.awt.geom.*;
  */
 public class Schrankwand extends Moebel
 {
-    Schrank schrank1;
-    Schrank schrank2;
-    Schrank schrank3;
+    int anzahl;
+    ArrayList<Schrank> schraenke = new ArrayList<Schrank>();
     
     /**
      * Konstruktor für Objekte der Klasse Schrankwand
@@ -25,9 +25,29 @@ public class Schrankwand extends Moebel
         istSichtbar = false;
         breite = 180;
         tiefe = 37;
-        schrank1 = new Schrank(0, 0, farbe, orientierung, breite/3, tiefe);
-        schrank2 = new Schrank(breite/3, 0, farbe, orientierung, breite/3, tiefe);
-        schrank3 = new Schrank(2*breite/3, 0, farbe, orientierung, breite/3, tiefe);
+        
+        
+        schraenke.add(new Schrank(0, 0, farbe, orientierung, breite/3, tiefe));
+        schraenke.add(new Schrank(breite/3, 0, farbe, orientierung, breite/3, tiefe));
+        schraenke.add(new Schrank(2*breite/3, 0, farbe, orientierung, breite/3, tiefe));
+    }
+    
+    public Schrankwand(int anzahl)
+    {
+        xPosition = 40;
+        yPosition = 80;
+        farbe = "blau";
+        orientierung = 0;
+        istSichtbar = false;
+        breite = 180;
+        tiefe = 37;
+        
+        anzahl = anzahl;
+        
+        for (int x = 0; x < anzahl; x++)
+        {
+            schraenke.add(new Schrank(x * breite / 3, 0, farbe, orientierung, breite/3, tiefe));
+        }
     }
     
     /**
@@ -37,11 +57,11 @@ public class Schrankwand extends Moebel
     {
         GeneralPath schrankwand = new GeneralPath();
 
-        schrankwand.append(schrank1.gibAktuelleFigur(), false);
-        schrankwand.append(schrank2.gibAktuelleFigur(), false);
-        schrankwand.append(schrank3.gibAktuelleFigur(), false);
+        for (Iterator<Schrank> schrank = schraenke.iterator(); schrank.hasNext();)
+        {
+            schrankwand.append(schrank.next().gibAktuelleFigur(), false);
+        }
         
         return transformiere(schrankwand);
-//        return schrankwand;
     }
 }
