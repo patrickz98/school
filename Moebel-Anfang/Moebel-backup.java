@@ -92,7 +92,7 @@ public abstract class Moebel
         xPosition += entfernung;
         zeichne();
     }
-    
+
     /**
      * Bewege dieses objekt vertikal um 'entfernung' Bildschirmpunkte.
      */

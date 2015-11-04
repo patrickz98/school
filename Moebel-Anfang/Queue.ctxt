@@ -1,0 +1,15 @@
+#BlueJ class context
+comment0.params=
+comment0.target=boolean\ isEmpty()
+comment1.params=o
+comment1.target=boolean\ add(java.lang.Object)
+comment2.params=
+comment2.target=java.lang.Object\ retrieve()
+comment2.text=\n\ Liefert\ das\ erste\ Element\ der\ Queue\ und\ entfernt\ es\n\ daraus.\ Falls\ die\ Queue\ leer\ ist,\ erh\u00E4lt\ man\ null.\n
+comment3.params=
+comment3.target=int\ size()
+comment4.params=
+comment4.target=void\ clear()
+comment5.params=
+comment5.target=java.util.Iterator\ iterator()
+numComments=6

@@ -1,6 +1,7 @@
 #BlueJ class context
 comment0.params=anzahl_stuele\ up_down
-comment0.target=void\ stuehl_positon(int,\ boolean)
+comment0.target=void\ stuhl_kreis(int,\ boolean)
+comment0.text=\n\ Funktion\ die\ die\ Stuehle\ im\ Kreis\ anordnet\n
 comment1.params=input_stuele
 comment1.target=Stuhl_Gruppe(int)
 comment1.text=\n\ Konstruktor\ f\u00FCr\ Objekte\ der\ Klasse\ Schrankwand\n
