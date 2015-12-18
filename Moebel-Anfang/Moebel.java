@@ -3,7 +3,6 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.AffineTransform;
 import java.io.*;
-
 /**
  * Ein Moebel, der manipuliert werden kann und sich selbst auf einer Leinwand zeichnet.
  *
@@ -19,7 +18,7 @@ public abstract class Moebel
     protected boolean istSichtbar;
     protected int breite;
     protected int tiefe;
-
+    
     /**
      * Erzeuge einen neuen Moebel mit einer Standardfarbe und Standardgroesse
      * an einer Standardposition. (Standardkonstruktor)
@@ -33,30 +32,23 @@ public abstract class Moebel
         breite = 40;
         tiefe  = 40;
     }
-
     // Transformfuntion für Shaps
     protected Shape transformiere(Shape shape)
     {
         AffineTransform t = new AffineTransform();
-
         t.translate(xPosition, yPosition);
-
         Rectangle2D umriss = shape.getBounds2D();
-
         t.rotate(Math.toRadians(orientierung),
         umriss.getX()+umriss.getWidth()/2,
         umriss.getY()+umriss.getHeight()/2);
-
         return t.createTransformedShape(shape);
     }
-
     /**
      * Berechnet das zu zeichnende Shape anhand der gegebenen Daten
      * [ Zum Anzeigen der Attributwerte �ber Inspect muss hier die Sichtbarkeit
      *  auf public gesetzt werden. ]
      */
     protected abstract Shape gibAktuelleFigur();
-
     /**
      * Mache dieses Objekt sichtbar. Wenn es bereits sichtbar ist, tue nichts.
      */
@@ -66,7 +58,6 @@ public abstract class Moebel
             zeichne();
         }
     }
-
     /**
      * Mache dieses Objekt unsichtbar. Wenn es bereits unsichtbar ist, tue nichts.
      */
@@ -74,7 +65,6 @@ public abstract class Moebel
         loesche(); // "tue nichts" wird in loesche() abgefangen.
         this.istSichtbar = false;
     }
-
     /**
      * Drehe auf den angegebenen Winkel
      */
@@ -83,7 +73,6 @@ public abstract class Moebel
         orientierung = neuerWinkel;
         zeichne();
     }
-
     /**
      * Bewege dieses Objekt horizontal um 'entfernung' Bildschirmpunkte.
      */
@@ -92,7 +81,7 @@ public abstract class Moebel
         xPosition += entfernung;
         zeichne();
     }
-    
+
     /**
      * Bewege dieses objekt vertikal um 'entfernung' Bildschirmpunkte.
      */
@@ -101,8 +90,6 @@ public abstract class Moebel
         yPosition += entfernung;
         zeichne();
     }
-
-
     /**
      * Aendere die Farbe dieses Objektes in 'neueFarbe'.
      * Gueltige Angaben sind "rot", "gelb", "blau", "gruen",
@@ -113,7 +100,6 @@ public abstract class Moebel
         farbe = neueFarbe;
         zeichne();
     }
-
     /**
      * Zeichne dieses Objekt mit seinen aktuellen Werten auf den Bildschirm.
      */
@@ -128,7 +114,6 @@ public abstract class Moebel
             leinwand.warte(10);
         }
     }
-
     /**
      * Loesche dieses Objekt vom Bildschirm.
      */
