@@ -19,16 +19,27 @@ public class Stuhl_Gruppe extends Moebel
     {
         // Durchmesser des Tisches
         int d = 200;
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> master
         // Intervall der Stuehle auf der x-Achse
         int x_intervall = (int) d / anzahl_stuele;
 
         // Kordinaten fuer die Stuehle
         int x, y;
+<<<<<<< HEAD
 
         // Es kann nur ein Halbkreis modelliert werden. (Oben/Unten)
         int placement;
 
+=======
+        
+        // Es kann nur ein Halbkreis modelliert werden. (Oben/Unten)
+        int placement;
+
+>>>>>>> master
         // Einstellung der Position
         if (up_down)
         {
@@ -48,6 +59,10 @@ public class Stuhl_Gruppe extends Moebel
         {
             // funktion zu y berechnung auf Basis eines Halbkreises
             y = (int) Math.sqrt(d * x - Math.pow(x, 2));
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
             stuehle.add( new Stuhl(x, (y * placement) + 100, farbe) );
             x += x_intervall;
         }
@@ -60,7 +75,13 @@ public class Stuhl_Gruppe extends Moebel
     {
         super.farbe = "rot";
         anzahl_stuele = input_stuele;
+<<<<<<< HEAD
         stuehle = new ArrayList<Stuhl>();
+=======
+
+        stuehle = new ArrayList<Stuhl>();
+
+>>>>>>> master
         // koordinaten fuer die Stuele.
         // Ungerade- / Geradezahl
         if (input_stuele % 2 == 0)

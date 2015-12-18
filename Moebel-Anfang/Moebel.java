@@ -32,10 +32,15 @@ public abstract class Moebel
         breite = 40;
         tiefe  = 40;
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     // Transformfuntion für Shaps
     protected Shape transformiere(Shape shape)
     {
         AffineTransform t = new AffineTransform();
+<<<<<<< HEAD
         t.translate(xPosition, yPosition);
         Rectangle2D umriss = shape.getBounds2D();
         t.rotate(Math.toRadians(orientierung),
@@ -43,12 +48,30 @@ public abstract class Moebel
         umriss.getY()+umriss.getHeight()/2);
         return t.createTransformedShape(shape);
     }
+=======
+
+        t.translate(xPosition, yPosition);
+
+        Rectangle2D umriss = shape.getBounds2D();
+
+        t.rotate(Math.toRadians(orientierung),
+        umriss.getX()+umriss.getWidth()/2,
+        umriss.getY()+umriss.getHeight()/2);
+
+        return t.createTransformedShape(shape);
+    }
+
+>>>>>>> master
     /**
      * Berechnet das zu zeichnende Shape anhand der gegebenen Daten
      * [ Zum Anzeigen der Attributwerte �ber Inspect muss hier die Sichtbarkeit
      *  auf public gesetzt werden. ]
      */
     protected abstract Shape gibAktuelleFigur();
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     /**
      * Mache dieses Objekt sichtbar. Wenn es bereits sichtbar ist, tue nichts.
      */
@@ -58,6 +81,10 @@ public abstract class Moebel
             zeichne();
         }
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     /**
      * Mache dieses Objekt unsichtbar. Wenn es bereits unsichtbar ist, tue nichts.
      */
@@ -65,6 +92,10 @@ public abstract class Moebel
         loesche(); // "tue nichts" wird in loesche() abgefangen.
         this.istSichtbar = false;
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     /**
      * Drehe auf den angegebenen Winkel
      */
@@ -73,6 +104,10 @@ public abstract class Moebel
         orientierung = neuerWinkel;
         zeichne();
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     /**
      * Bewege dieses Objekt horizontal um 'entfernung' Bildschirmpunkte.
      */
@@ -90,6 +125,11 @@ public abstract class Moebel
         yPosition += entfernung;
         zeichne();
     }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> master
     /**
      * Aendere die Farbe dieses Objektes in 'neueFarbe'.
      * Gueltige Angaben sind "rot", "gelb", "blau", "gruen",
@@ -100,6 +140,10 @@ public abstract class Moebel
         farbe = neueFarbe;
         zeichne();
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     /**
      * Zeichne dieses Objekt mit seinen aktuellen Werten auf den Bildschirm.
      */
@@ -114,6 +158,10 @@ public abstract class Moebel
             leinwand.warte(10);
         }
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     /**
      * Loesche dieses Objekt vom Bildschirm.
      */
