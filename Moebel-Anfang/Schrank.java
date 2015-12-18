@@ -3,8 +3,8 @@ import java.awt.geom.*;
 
 /**
  * Beschreiben Sie hier die Klasse Schrank.
- * 
- * @author (Ihr Name) 
+ *
+ * @author (Ihr Name)
  * @version (eine Versionsnummer oder ein Datum)
  */
 public class Schrank extends Moebel
@@ -23,7 +23,6 @@ public class Schrank extends Moebel
         tiefe = t;
     }
 
-    
     /**
     * Berechnet das zu zeichnende Shape anhand der gegebenen Daten
     */
@@ -36,8 +35,7 @@ public class Schrank extends Moebel
         schrank.append(rahmen, false);
         schrank.append(linie1, false);
         schrank.append(linie2, false);
-        
+
          return transformiere(schrank);
-//        return schrank;
     }
 }

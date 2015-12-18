@@ -1,5 +1,4 @@
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Ellipse2D;
 
@@ -7,18 +6,19 @@ import java.awt.geom.Ellipse2D;
  * Ein Tisch, der manipuliert werden kann und sich selbst auf einer Leinwand zeichnet.
  *
  * @author Claus Albowski
- * @version 2.2  (aug 07)
+ * @version 2.3  (sept 07)
  */
 public class Tisch extends Moebel
 {
+
     /**
-     * Erzeuge einen neuen Stuhl mit einer Standardfarbe und Standardgroesse
+     * Erzeuge einen neuen Tisch mit einer Standardfarbe und Standardgroesse
      * an einer Standardposition. (Standardkonstruktor)
      */
     public Tisch()
     {
         xPosition = 120;
-        yPosition = 150;
+        yPosition = 70;
         orientierung = 0;
         farbe = "rot";
         istSichtbar = false;
@@ -27,30 +27,32 @@ public class Tisch extends Moebel
     }
 
     /**
-     * Erzeuge einen neuen Stuhl mit einer Standardfarbe und Standardgroesse
-     * an einer Standardposition. (Standardkonstruktor)
+     * Erzeuge einen neuen Tisch.
      */
-    public Tisch(int x, int y, int diameter, String color)
+    public Tisch(int xPosition,
+                int yPosition,
+                String farbe,
+                int orientierung,
+                int breite,
+                int tiefe)
     {
-        xPosition = x;
-        yPosition = y;
-        orientierung = 0;
-        farbe = color;
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+        this.farbe = farbe;
+        this.orientierung = orientierung;
         istSichtbar = false;
-        breite = diameter;
-        tiefe  = diameter;
+        this.breite = breite;
+        this.tiefe  = tiefe;
     }
 
     /**
      * Berechnet das zu zeichnende Shape anhand der gegebenen Daten
-     * [ Zum Anzeigen der Attributwerte �ber Inspect muss hier die Sichtbarkeit
+     * [ Zum Anzeigen der Attributwerte ber Inspect muss hier die Sichtbarkeit
      *  auf public gesetzt werden. ]
      */
     protected Shape gibAktuelleFigur()
     {
-        // definieren
         Shape tisch = new Ellipse2D.Double(0 , 0, breite, tiefe);
-
-        return  transformiere(tisch);
+        return transformiere(tisch);
     }
 }

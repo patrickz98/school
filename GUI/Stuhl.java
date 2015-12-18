@@ -1,40 +1,44 @@
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.AffineTransform;
+
+
 /**
  * Ein Stuhl, der manipuliert werden kann und sich selbst auf einer Leinwand zeichnet.
  *
  * @author Claus Albowski
- * @version 2.2  (aug 07)
+ * @version 2.3  (sept 07)
  */
 public class Stuhl extends Moebel
 {
+
     /**
      * Erzeuge einen neuen Stuhl mit einer Standardfarbe und Standardgroesse
      * an einer Standardposition. (Standardkonstruktor)
      */
     public Stuhl()
     {
-        xPosition = 160;
-        yPosition = 80;
+        xPosition = 60;
+        yPosition = 100;
         farbe = "blau";
-        orientierung = 0;
+        orientierung = 270;
         istSichtbar = false;
         breite = 40;
         tiefe  = 40;
     }
 
     /**
-     * Erzeuge einen neuen Stuhl mit einer abgefragten Standardfarbe und abgefragten Standardgroesse
-     * an einer Standardposition. (Standardkonstruktor)
+     * Erzeuge einen neuen Stuhl mit einer Standardgroesse.
      */
-    public Stuhl(int x, int y, String colour)
-    {
-        xPosition = x;
-        yPosition = y;
-        farbe = colour;
-        orientierung = 0;
+    public Stuhl(int xPosition,
+                int yPosition,
+                String farbe,
+                int orientierung)
+                {
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+        this.farbe = farbe;
+        this.orientierung = orientierung;
         istSichtbar = false;
         breite = 40;
         tiefe  = 40;
@@ -42,7 +46,7 @@ public class Stuhl extends Moebel
 
     /**
      * Berechnet das zu zeichnende Shape anhand der gegebenen Daten
-     * [ Zum Anzeigen der Attributwerte �ber Inspect muss hier die Sichtbarkeit
+     * [ Zum Anzeigen der Attributwerte ber Inspect muss hier die Sichtbarkeit 
      *  auf public gesetzt werden. ]
      */
     protected Shape gibAktuelleFigur()
@@ -54,11 +58,10 @@ public class Stuhl extends Moebel
         stuhl.lineTo(breite+(breite/20+1), tiefe);
         stuhl.lineTo(-(breite/20+1), tiefe);
         stuhl.lineTo(0 , 0);
-
         // Das ist die Umrandung. Das Stuhl bekommt noch eine Lehne:
         stuhl.moveTo(0 , (breite/10+1));
         stuhl.lineTo(breite, (breite/10+1));
-
-        return  transformiere(stuhl);
+        return transformiere(stuhl);
     }
+
 }

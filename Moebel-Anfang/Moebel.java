@@ -3,7 +3,6 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.AffineTransform;
 import java.io.*;
-
 /**
  * Ein Moebel, der manipuliert werden kann und sich selbst auf einer Leinwand zeichnet.
  *
@@ -19,7 +18,7 @@ public abstract class Moebel
     protected boolean istSichtbar;
     protected int breite;
     protected int tiefe;
-
+    
     /**
      * Erzeuge einen neuen Moebel mit einer Standardfarbe und Standardgroesse
      * an einer Standardposition. (Standardkonstruktor)
@@ -33,11 +32,23 @@ public abstract class Moebel
         breite = 40;
         tiefe  = 40;
     }
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
     // Transformfuntion für Shaps
     protected Shape transformiere(Shape shape)
     {
         AffineTransform t = new AffineTransform();
+<<<<<<< HEAD
+        t.translate(xPosition, yPosition);
+        Rectangle2D umriss = shape.getBounds2D();
+        t.rotate(Math.toRadians(orientierung),
+        umriss.getX()+umriss.getWidth()/2,
+        umriss.getY()+umriss.getHeight()/2);
+        return t.createTransformedShape(shape);
+    }
+=======
 
         t.translate(xPosition, yPosition);
 
@@ -50,13 +61,17 @@ public abstract class Moebel
         return t.createTransformedShape(shape);
     }
 
+>>>>>>> master
     /**
      * Berechnet das zu zeichnende Shape anhand der gegebenen Daten
      * [ Zum Anzeigen der Attributwerte �ber Inspect muss hier die Sichtbarkeit
      *  auf public gesetzt werden. ]
      */
     protected abstract Shape gibAktuelleFigur();
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
     /**
      * Mache dieses Objekt sichtbar. Wenn es bereits sichtbar ist, tue nichts.
      */
@@ -66,7 +81,10 @@ public abstract class Moebel
             zeichne();
         }
     }
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
     /**
      * Mache dieses Objekt unsichtbar. Wenn es bereits unsichtbar ist, tue nichts.
      */
@@ -74,7 +92,10 @@ public abstract class Moebel
         loesche(); // "tue nichts" wird in loesche() abgefangen.
         this.istSichtbar = false;
     }
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
     /**
      * Drehe auf den angegebenen Winkel
      */
@@ -83,7 +104,10 @@ public abstract class Moebel
         orientierung = neuerWinkel;
         zeichne();
     }
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
     /**
      * Bewege dieses Objekt horizontal um 'entfernung' Bildschirmpunkte.
      */
@@ -92,7 +116,7 @@ public abstract class Moebel
         xPosition += entfernung;
         zeichne();
     }
-    
+
     /**
      * Bewege dieses objekt vertikal um 'entfernung' Bildschirmpunkte.
      */
@@ -101,8 +125,11 @@ public abstract class Moebel
         yPosition += entfernung;
         zeichne();
     }
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> master
     /**
      * Aendere die Farbe dieses Objektes in 'neueFarbe'.
      * Gueltige Angaben sind "rot", "gelb", "blau", "gruen",
@@ -113,7 +140,10 @@ public abstract class Moebel
         farbe = neueFarbe;
         zeichne();
     }
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
     /**
      * Zeichne dieses Objekt mit seinen aktuellen Werten auf den Bildschirm.
      */
@@ -128,7 +158,10 @@ public abstract class Moebel
             leinwand.warte(10);
         }
     }
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
     /**
      * Loesche dieses Objekt vom Bildschirm.
      */

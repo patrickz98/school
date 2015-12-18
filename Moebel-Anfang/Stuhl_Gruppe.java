@@ -2,7 +2,6 @@ import java.awt.Shape;
 import java.awt.geom.*;
 import java.util.*;
 import java.lang.Math.*;
-
 /**
  * Beschreiben Sie hier die Klasse Schrankwand.
  *
@@ -13,7 +12,6 @@ public class Stuhl_Gruppe extends Moebel
     private Tisch tisch;
     private ArrayList<Stuhl> stuehle;
     private int anzahl_stuele;
-
     /**
      * Funktion die die Stuehle im Kreis anordnet
      */
@@ -21,16 +19,27 @@ public class Stuhl_Gruppe extends Moebel
     {
         // Durchmesser des Tisches
         int d = 200;
+<<<<<<< HEAD
+
+=======
         
+>>>>>>> master
         // Intervall der Stuehle auf der x-Achse
         int x_intervall = (int) d / anzahl_stuele;
 
         // Kordinaten fuer die Stuehle
         int x, y;
+<<<<<<< HEAD
+
+        // Es kann nur ein Halbkreis modelliert werden. (Oben/Unten)
+        int placement;
+
+=======
         
         // Es kann nur ein Halbkreis modelliert werden. (Oben/Unten)
         int placement;
 
+>>>>>>> master
         // Einstellung der Position
         if (up_down)
         {
@@ -50,7 +59,10 @@ public class Stuhl_Gruppe extends Moebel
         {
             // funktion zu y berechnung auf Basis eines Halbkreises
             y = (int) Math.sqrt(d * x - Math.pow(x, 2));
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
             stuehle.add( new Stuhl(x, (y * placement) + 100, farbe) );
             x += x_intervall;
         }
@@ -63,9 +75,13 @@ public class Stuhl_Gruppe extends Moebel
     {
         super.farbe = "rot";
         anzahl_stuele = input_stuele;
+<<<<<<< HEAD
+        stuehle = new ArrayList<Stuhl>();
+=======
 
         stuehle = new ArrayList<Stuhl>();
 
+>>>>>>> master
         // koordinaten fuer die Stuele.
         // Ungerade- / Geradezahl
         if (input_stuele % 2 == 0)
@@ -78,7 +94,6 @@ public class Stuhl_Gruppe extends Moebel
             stuhl_kreis((input_stuele - 1) / 2 + 1, true);
             stuhl_kreis((input_stuele - 1) / 2,     false);
         }
-
         // Tisch fuer die Stuhl-Gruppe
         tisch = new Tisch(75, 75, 100, farbe);
     }
@@ -99,7 +114,6 @@ public class Stuhl_Gruppe extends Moebel
             // datenabruf aus dem stuehle array
             schrankwand.append(((Stuhl) stuehle.get(x)).gibAktuelleFigur(), false);
         }
-
         // rueckgabe der Stuhl-Gruppe als ein obj.
         return transformiere(schrankwand);
     }
