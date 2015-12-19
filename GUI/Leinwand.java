@@ -23,16 +23,6 @@ import java.awt.event.*;
  * Sie ist eine vereinfachte Version der Klasse Canvas (englisch f�r
  * Leinwand) des JDK und wurde speziell f�r das Projekt "Figuren"
  * geschrieben.
- *
- *
- * @author: Bruce Quig
- * @author: Michael K�lling (mik)
- * @author: Axel Schmolitzky
- *
- * @author: �nderungen von
- * @Java-MS Groupies
- * @hier: Uwe Debacher
- *
  * @version: 1.7 (5.12.2003)
  */
 public class Leinwand extends JFrame

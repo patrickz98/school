@@ -22,7 +22,7 @@ public class Controller
 
 	private Controller()
 	{
-		moebel = new ArrayList();
+		moebel = new ArrayList<Moebel>();
 		ausgewaehlt = -1;
 	}
 
