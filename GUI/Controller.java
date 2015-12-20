@@ -95,7 +95,6 @@ public class Controller
 		 if (ausgewaehltes() != null) ausgewaehltes().dreheAuf(original + input);
 	}
 
-
 	public void aendereFarbe(String farbe)
 	{
 		if (ausgewaehltes() != null && !farbe.equals(""))
@@ -206,7 +205,7 @@ public class Controller
 
         ObjectOutputStream ausgabe = new ObjectOutputStream(new FileOutputStream(dateiName));
 
-        for (int i=0; i < moebel.size(); i++)
+        for (int i = 0; i < moebel.size(); i++)
         {
             ausgabe.writeObject(moebel.get(i));
         }
@@ -217,9 +216,19 @@ public class Controller
 	public void holen(String dateiName)
 	throws ClassNotFoundException, IOException, FileNotFoundException
 	{
-		if (dateiName.equals("")) dateiName = "default.save";
+		if (dateiName.equals(""))
+		{
+			System.err.println("NOOOO1");
+			dateiName = "default.save";
+			File f = new File(dateiName);
+			if(!f.exists() || f.isDirectory())
+			{
+				System.err.println("NOOOO2");
+				return;
+			}
+		}
 
-        for (int i=0; i < moebel.size(); i++)
+        for (int i = 0; i < moebel.size(); i++)
         {
             // Vorhandenes loeschen
             moebel.get(i).verberge();
@@ -253,11 +262,6 @@ public class Controller
 		eingabe.close();
 	}
 
-
-
-	/**
-	 * Hilfsmethode zum Konvertieren
-	 */
 	public int StringToInt(String inhalt)
 	{
 		int wert = 0;
