@@ -44,13 +44,13 @@ public class Leinwand extends JFrame
 	 */
 	public static Leinwand gibLeinwand()
 	{
-	if (leinwandSingleton == null)
-	{
-		leinwandSingleton =
-		new Leinwand("Moebelprojekt", 900, 600, Color.white);
-	}
-	leinwandSingleton.setzeSichtbarkeit(true);
-	return leinwandSingleton;
+		if (leinwandSingleton == null)
+		{
+			leinwandSingleton =
+			new Leinwand("Moebelprojekt", 900, 600, Color.white);
+		}
+		leinwandSingleton.setzeSichtbarkeit(true);
+		return leinwandSingleton;
 	}
 
 	//	----- Exemplarvariablen -----
@@ -75,53 +75,62 @@ public class Leinwand extends JFrame
 	public Leinwand(String titel, int breite, int hoehe, Color grundfarbe)
 	{
 		super(titel);
-	// fenster = new JFrame();
+		// fenster = new JFrame();
 
-	zeichenflaeche = new Zeichenflaeche();
-	MouseAdapter mouseAdapter = new MouseAdapter()
-	{
+		zeichenflaeche = new Zeichenflaeche();
+		MouseWheelListener mouseWheel = new MouseWheelListener()
+		{
+			public void mouseWheelMoved(MouseWheelEvent e)
+			{
+				Controller.gibController().drehe(e.getWheelRotation() * 2);
+			}
+		};
+
+		MouseAdapter mouseAdapter = new MouseAdapter()
+		{
 			public void mouseMoved(MouseEvent e)
 			{
-					contorl = false;
+				contorl = false;
 			}
 
-		public void mouseClicked(MouseEvent e)
-		{
-					Controller.gibController().angeklickt(e.getX(), e.getY());
-		}
+			public void mouseClicked(MouseEvent e)
+			{
+				Controller.gibController().angeklickt(e.getX(), e.getY());
+			}
 
-			// jumping objects #bug
+			// jumping objects #bug fixed
 			public void mouseDragged(MouseEvent e)
-		{
+			{
 				if (Controller.gibController().touched(e.getX(), e.getY()) || contorl)
 				{
-						Controller.gibController().verschiebeAuf(e.getX(), e.getY());
-						contorl = true;
+					Controller.gibController().verschiebeAuf(e.getX(), e.getY());
+					contorl = true;
 				}
-		}
+			}
 
 			public void mousePressed(MouseEvent e)
-		{
-		Controller.gibController().mausposition(e.getX(), e.getY());
-		}
-	};
+			{
+				Controller.gibController().mausposition(e.getX(), e.getY());
+			}
+		};
 
-	zeichenflaeche.addMouseListener(mouseAdapter);
-	zeichenflaeche.addMouseMotionListener(mouseAdapter);
+		zeichenflaeche.addMouseListener(mouseAdapter);
+		zeichenflaeche.addMouseMotionListener(mouseAdapter);
+		zeichenflaeche.addMouseWheelListener(mouseWheel);
 
 		setContentPane(zeichenflaeche);
-	setTitle(titel);
+		setTitle(titel);
 		// fenster.setContentPane(zeichenflaeche);
-	// fenster.setTitle(titel);
+		// fenster.setTitle(titel);
 
 		zeichenflaeche.setPreferredSize(new Dimension(breite, hoehe));
-	hintergrundfarbe = grundfarbe;
+		hintergrundfarbe = grundfarbe;
 
 		pack();
 		// fenster.pack();
 
 		figuren = new ArrayList<Object>();
-	figurZuShape = new HashMap<Object, ShapeMitFarbe>();
+		figurZuShape = new HashMap<Object, ShapeMitFarbe>();
 	}
 
 
@@ -222,14 +231,14 @@ public class Leinwand extends JFrame
 	 */
 	public void warte(int millisekunden)
 	{
-	try
-	{
-		Thread.sleep(millisekunden);
-	}
-	catch (Exception e)
-	{
-		// Exception ignorieren
-	}
+		try
+		{
+			Thread.sleep(millisekunden);
+		}
+		catch (Exception e)
+		{
+			// Exception ignorieren
+		}
 	}
 
 	/**
@@ -237,12 +246,12 @@ public class Leinwand extends JFrame
 	 */
 	private void erneutZeichnen()
 	{
-	loeschen();
-	for (Iterator i = figuren.iterator(); i.hasNext();)
-	{
-		((ShapeMitFarbe) figurZuShape.get(i.next())).draw(graphic);
-	}
-	zeichenflaeche.repaint();
+		loeschen();
+		for (Iterator i = figuren.iterator(); i.hasNext();)
+		{
+			((ShapeMitFarbe) figurZuShape.get(i.next())).draw(graphic);
+		}
+		zeichenflaeche.repaint();
 	}
 
 	/**
@@ -250,11 +259,11 @@ public class Leinwand extends JFrame
 	 */
 	private void loeschen()
 	{
-	Color original = graphic.getColor();
-	graphic.setColor(hintergrundfarbe);
-	Dimension size = zeichenflaeche.getSize();
-	graphic.fill(new Rectangle(0, 0, size.width, size.height));
-	graphic.setColor(original);
+		Color original = graphic.getColor();
+		graphic.setColor(hintergrundfarbe);
+		Dimension size = zeichenflaeche.getSize();
+		graphic.fill(new Rectangle(0, 0, size.width, size.height));
+		graphic.setColor(original);
 	}
 
 	/************************************************************************
@@ -265,10 +274,10 @@ public class Leinwand extends JFrame
 	 */
 	private class Zeichenflaeche extends JPanel
 	{
-	public void paint(Graphics g)
-	{
-		g.drawImage(leinwandImage, 0, 0, null);
-	}
+		public void paint(Graphics g)
+		{
+			g.drawImage(leinwandImage, 0, 0, null);
+		}
 	}
 
 	/************************************************************************
@@ -279,20 +288,19 @@ public class Leinwand extends JFrame
 	 */
 	private class ShapeMitFarbe
 	{
-	private Shape shape;
-	private String farbe;
+		private Shape shape;
+		private String farbe;
 
-	public ShapeMitFarbe(Shape shape, String farbe)
-	{
-		this.shape = shape;
-		this.farbe = farbe;
-	}
+		public ShapeMitFarbe(Shape shape, String farbe)
+		{
+			this.shape = shape;
+			this.farbe = farbe;
+		}
 
-	public void draw(Graphics2D graphic)
-	{
-		setzeZeichenfarbe(farbe);
-		graphic.draw(shape);
+		public void draw(Graphics2D graphic)
+		{
+			setzeZeichenfarbe(farbe);
+			graphic.draw(shape);
+		}
 	}
-	}
-
 }

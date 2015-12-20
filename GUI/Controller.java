@@ -79,19 +79,29 @@ public class Controller
 
 	public void waagerecht(String inhalt)
 	{
-		 int weite=StringToInt(inhalt);
+		 int weite = StringToInt(inhalt);
 		 if (ausgewaehltes() != null) ausgewaehltes().bewegeHorizontal(weite);
 	}
 
-	public void drehe(String inhalt)
+	// public void drehe(String inhalt)
+	// {
+	// 	 int winkel = StringToInt(inhalt);
+	// 	 if (ausgewaehltes() != null) ausgewaehltes().dreheAuf(winkel);
+	// }
+
+	public void drehe(int input)
 	{
-		 int winkel=StringToInt(inhalt);
-		 if (ausgewaehltes() != null) ausgewaehltes().dreheAuf(winkel);
+		 int original = ausgewaehltes().gibWinkel();
+		 if (ausgewaehltes() != null) ausgewaehltes().dreheAuf(original + input);
 	}
+
 
 	public void aendereFarbe(String farbe)
 	{
-		if (ausgewaehltes() != null) ausgewaehltes().aendereFarbe(farbe);
+		if (ausgewaehltes() != null && !farbe.equals(""))
+		{
+			ausgewaehltes().aendereFarbe(farbe);
+		}
 	}
 
     public String voriges()
@@ -109,7 +119,7 @@ public class Controller
 	public String naechstes()
 	{
 		String aktuell = "keines";
-		if (moebel.size()>0)
+		if (moebel.size() > 0)
 		{
 			ausgewaehlt++;
 			if (ausgewaehlt >= moebel.size()) ausgewaehlt = 0;
@@ -192,7 +202,7 @@ public class Controller
 	public void sichern(String dateiName)
 	throws IOException, FileNotFoundException
 	{
-		if (dateiName.equals("")) dateiName = "ausgabe.moe";
+		if (dateiName.equals("")) dateiName = "default.save";
 
         ObjectOutputStream ausgabe = new ObjectOutputStream(new FileOutputStream(dateiName));
 
@@ -207,7 +217,7 @@ public class Controller
 	public void holen(String dateiName)
 	throws ClassNotFoundException, IOException, FileNotFoundException
 	{
-		if (dateiName.equals("")) dateiName = "ausgabe.moe";
+		if (dateiName.equals("")) dateiName = "default.save";
 
         for (int i=0; i < moebel.size(); i++)
         {
@@ -224,21 +234,21 @@ public class Controller
 
         while (!fertig)
 		{
-				try
-                {
-                    obj = (Moebel)eingabe.readObject();
-                }
-				catch (EOFException e)
-                {
-                    fertig=true;
-                }
+			try
+            {
+                obj = (Moebel) eingabe.readObject();
+            }
+			catch (EOFException e)
+            {
+                fertig = true;
+            }
 
-                if (!fertig)
-				{
-						moebel.add(obj);
-						obj.verberge(); // notwendig um zunaechst das Attribut sichtbar auf false zu setzen
-						obj.zeige();
-				}
+            if (!fertig)
+			{
+					moebel.add(obj);
+					obj.verberge(); // notwendig um zunaechst das Attribut sichtbar auf false zu setzen
+					obj.zeige();
+			}
 		}
 		eingabe.close();
 	}
@@ -250,7 +260,7 @@ public class Controller
 	 */
 	public int StringToInt(String inhalt)
 	{
-		int wert=0;
+		int wert = 0;
 		try
 		{
             wert = Integer.parseInt(inhalt);

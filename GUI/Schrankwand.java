@@ -22,6 +22,7 @@ public class Schrankwand extends Moebel
      */
      public Schrankwand()
      {
+         anzahl = 3;
          xPosition = 10;
          yPosition = 10;
          farbe = "schwarz";
@@ -29,7 +30,7 @@ public class Schrankwand extends Moebel
          istSichtbar = false;
          breite = anzahl*60;
          tiefe  = 37;
-         initSchraenke(3);
+         initSchraenke(anzahl);
      }
 
     public Schrankwand(int anzahl)

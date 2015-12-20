@@ -138,4 +138,9 @@ public abstract class Moebel implements Serializable
             leinwand.entferne(this);
         }
     }
+
+    public int gibWinkel()
+    {
+        return orientierung;
+    }
 }

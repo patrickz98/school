@@ -20,7 +20,7 @@ public class Tisch extends Moebel
         xPosition = 120;
         yPosition = 70;
         orientierung = 0;
-        farbe = "rot";
+        farbe = "schwarz";
         istSichtbar = false;
         breite = 120;
         tiefe  = 100;

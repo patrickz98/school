@@ -22,7 +22,7 @@ public class Schrank extends Moebel
         xPosition = 330;
         yPosition = 50;
         farbe = "schwarz";
-        orientierung = 90;
+        orientierung = 0;
         istSichtbar = false;
         breite = 60;
         tiefe  = 37;
@@ -49,7 +49,7 @@ public class Schrank extends Moebel
 
     /**
      * Berechnet das zu zeichnende Shape anhand der gegebenen Daten
-     * [ Zum Anzeigen der Attributwerte ber Inspect muss hier die Sichtbarkeit 
+     * [ Zum Anzeigen der Attributwerte ber Inspect muss hier die Sichtbarkeit
      *  auf public gesetzt werden. ]
      */
     protected Shape gibAktuelleFigur()

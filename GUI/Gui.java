@@ -26,8 +26,6 @@ public class Gui
     private JMenu jBearbeitenMenu = new JMenu("Bearbeiten");
 
     private JMenu NewMenu = new JMenu("Neu");
-	// private JMenuItem BearbeitenJMenuItem1  = new JMenuItem("Stuhl");
-	// private JMenuItem BearbeitenJMenuItem2  = new JMenuItem("Tisch");
 
 	private JMenuItem BearbeitenJMenuItem8  = new JMenuItem("Loeschen");
 	private JMenuItem BearbeitenJMenuItem10 = new JMenuItem("neue Farbe");
@@ -43,7 +41,17 @@ public class Gui
 
         myFrame = Leinwand.gibLeinwand();
 
-		myFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        WindowListener windowListener = new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                exit();
+            }
+        };
+
+		myFrame.addWindowListener(windowListener);
+        ///myFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         // int frameWidth = 600;
 		// int frameHeight = 500;
@@ -191,7 +199,7 @@ public class Gui
 	// Anfang Methoden
 	public void DateiJMenuItem1_ActionPerformed(ActionEvent evt)
 	{
-		String dateiName = JOptionPane.showInputDialog(this, "Dateinamen eingeben\nleer: ausgabe.moe");
+		String dateiName = JOptionPane.showInputDialog("Datei:", "default.save");
 		try
 		{
 				try
@@ -202,38 +210,47 @@ public class Gui
 						}
                         catch (ClassNotFoundException e)
                         {
-                            // JOptionPane.showMessageDialog(this, "Klasse gibt es nicht!");
+                            JOptionPane.showMessageDialog(null, "Klasse gibt es nicht!");
+                            System.err.println("Klasse gibt es nicht!");
                         }
 				}
                 catch (FileNotFoundException e)
                 {
-                    // JOptionPane.showMessageDialog(this, "Datei nicht gefunden!");
+                    JOptionPane.showMessageDialog(null, "Datei nicht gefunden!");
+                    System.err.println("Datei nicht gefunden!");
                 }
 		}
         catch (IOException e)
         {
-            // JOptionPane.showMessageDialog(this, "E/A-Fehler!");
+            JOptionPane.showMessageDialog(null, "E/A-Fehler!");
+            System.err.println("E/A-Fehler!");
         }
 	}
 
 	public void DateiJMenuItem2_ActionPerformed(ActionEvent evt)
 	{
-		String dateiName=JOptionPane.showInputDialog(this, "Dateinamen eingeben\nleer: ausgabe.moe");
+		String dateiName = JOptionPane.showInputDialog("Datei", "default.save");
 		try
         {
             controller.sichern(dateiName);
         }
 		catch (IOException e)
         {
-            // JOptionPane.showMessageDialog(this, "Datei nicht gefunden!");
+            JOptionPane.showMessageDialog(null, "Datei nicht gefunden!");
+            System.err.println("DateiJMenuItem2_ActionPerformed: Datei nicht gefunden!");
         }
 	}
 
-	public void DateiJMenuItem3_ActionPerformed(ActionEvent evt)
+    public void exit()
 	{
 		Leinwand lw = Leinwand.gibLeinwand();
 		lw.setzeSichtbarkeit(false);
 		System.exit(0);
+	}
+
+	public void DateiJMenuItem3_ActionPerformed(ActionEvent evt)
+	{
+        exit();
 	}
 
 	Controller controller = Controller.gibController();
@@ -249,7 +266,7 @@ public class Gui
 
 	public void BearbeitenJMenuItem10_ActionPerformed(ActionEvent evt)
 	{
-		controller.aendereFarbe(JOptionPane.showInputDialog(this, "Farbe ?"));
+		controller.aendereFarbe(JOptionPane.showInputDialog("Farbe:", ""));
 	}
 
 	// Ende Methoden

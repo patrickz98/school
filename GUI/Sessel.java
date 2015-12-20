@@ -21,8 +21,8 @@ public class Sessel extends Moebel
     {
         xPosition = 250;
         yPosition = 90;
-        farbe = "blau";
-        orientierung = 90;
+        farbe = "schwarz";
+        orientierung = 0;
         istSichtbar = false;
         breite = 60;
         tiefe  = 60;
