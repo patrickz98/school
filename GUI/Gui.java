@@ -4,14 +4,6 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.io.*;
 
-/**
-  *
-  * Beschreibung
-  *
-  * @version 1.0 vom 10.05.2011
-  * @author
-*/
-
 public class Gui
 {
     private JFrame myFrame;

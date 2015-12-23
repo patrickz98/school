@@ -15,13 +15,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import java.awt.event.*;
-
+import java.io.*;
 
 /**
  * Leinwand ist eine Klasse, die einfache Zeichenoperationen auf einer
  * leinwandartigen Zeichenflaeche ermoeglicht.
  * Sie ist eine vereinfachte Version der Klasse Canvas (englisch f�r
- * Leinwand) des JDK und wurde speziell f�r das Projekt "Figuren"
+ * Leinwand) des JDK und wurde speziell fr das Projekt "Figuren"
  * geschrieben.
  * @version: 1.7 (5.12.2003)
  */
@@ -46,8 +46,7 @@ public class Leinwand extends JFrame
 	{
 		if (leinwandSingleton == null)
 		{
-			leinwandSingleton =
-			new Leinwand("Moebelprojekt", 900, 600, Color.white);
+			leinwandSingleton = new Leinwand("Moebelprojekt", 900, 600, Color.white);
 		}
 		leinwandSingleton.setzeSichtbarkeit(true);
 		return leinwandSingleton;
@@ -63,7 +62,8 @@ public class Leinwand extends JFrame
 	private List<Object> figuren;
 	private Map<Object, ShapeMitFarbe> figurZuShape; // Abbildung von Figuren zu Shapes
 
-	private boolean contorl = false;
+	private Dimension frame_dimension;
+	private boolean jumping_contorl = false;
 
 	/**
 	 * Erzeuge eine Leinwand.
@@ -90,7 +90,7 @@ public class Leinwand extends JFrame
 		{
 			public void mouseMoved(MouseEvent e)
 			{
-				contorl = false;
+				jumping_contorl = false;
 			}
 
 			public void mouseClicked(MouseEvent e)
@@ -101,10 +101,10 @@ public class Leinwand extends JFrame
 			// jumping objects #bug fixed
 			public void mouseDragged(MouseEvent e)
 			{
-				if (Controller.gibController().touched(e.getX(), e.getY()) || contorl)
+				if (Controller.gibController().touched(e.getX(), e.getY()) || jumping_contorl)
 				{
 					Controller.gibController().verschiebeAuf(e.getX(), e.getY());
-					contorl = true;
+					jumping_contorl = true;
 				}
 			}
 
@@ -118,19 +118,20 @@ public class Leinwand extends JFrame
 		zeichenflaeche.addMouseMotionListener(mouseAdapter);
 		zeichenflaeche.addMouseWheelListener(mouseWheel);
 
+		setResizable(true);
 		setContentPane(zeichenflaeche);
 		setTitle(titel);
-		// fenster.setContentPane(zeichenflaeche);
-		// fenster.setTitle(titel);
 
 		zeichenflaeche.setPreferredSize(new Dimension(breite, hoehe));
 		hintergrundfarbe = grundfarbe;
 
 		pack();
-		// fenster.pack();
 
 		figuren = new ArrayList<Object>();
 		figurZuShape = new HashMap<Object, ShapeMitFarbe>();
+
+		// null pointer warning
+		frame_dimension = new Dimension(getWidth(), getHeight());
 	}
 
 

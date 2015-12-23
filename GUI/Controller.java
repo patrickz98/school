@@ -216,17 +216,7 @@ public class Controller
 	public void holen(String dateiName)
 	throws ClassNotFoundException, IOException, FileNotFoundException
 	{
-		if (dateiName.equals(""))
-		{
-			System.err.println("NOOOO1");
-			dateiName = "default.save";
-			File f = new File(dateiName);
-			if(!f.exists() || f.isDirectory())
-			{
-				System.err.println("NOOOO2");
-				return;
-			}
-		}
+		if (dateiName.equals("")) dateiName = "default.save";
 
         for (int i = 0; i < moebel.size(); i++)
         {
