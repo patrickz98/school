@@ -9,6 +9,9 @@ clean:
 	# find . -name "*.save" -delete
 	find . -name ".DS_Store" -delete
 
+clean-save:
+	find . -name "*.save" -delete
+
 run-linux: clean javac
 	java -cp . Gui
 

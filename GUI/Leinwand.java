@@ -118,6 +118,7 @@ public class Leinwand extends JFrame
 		zeichenflaeche.addMouseMotionListener(mouseAdapter);
 		zeichenflaeche.addMouseWheelListener(mouseWheel);
 
+		setLayout(null);
 		setResizable(true);
 		setContentPane(zeichenflaeche);
 		setTitle(titel);

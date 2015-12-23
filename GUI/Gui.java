@@ -3,6 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Gui
 {
@@ -10,27 +11,25 @@ public class Gui
 
 	private JMenuBar jmb = new JMenuBar();
 
-    private JMenu     jDateiMenu      = new JMenu("Datei");
-	private JMenuItem DateiJMenuItem1 = new JMenuItem("Oeffnen");
-	private JMenuItem DateiJMenuItem2 = new JMenuItem("Speichern");
-	private JMenuItem DateiJMenuItem3 = new JMenuItem("Beenden");
+    private JMenu GuiMenu = new JMenu("Gui");
+    private JMenuItem Size = new JMenuItem("Size");
 
-    private JMenu jBearbeitenMenu = new JMenu("Bearbeiten");
 
+    private JMenu DateiMenu = new JMenu("Datei");
+	private JMenuItem DateiOeffnen = new JMenuItem("Oeffnen");
+	private JMenuItem DateiSpeichern = new JMenuItem("Speichern");
+	private JMenuItem DateiBeenden = new JMenuItem("Beenden");
+
+    private JMenu BearbeitenMenu = new JMenu("Bearbeiten");
     private JMenu NewMenu = new JMenu("Neu");
-
-	private JMenuItem BearbeitenJMenuItem8  = new JMenuItem("Loeschen");
-	private JMenuItem BearbeitenJMenuItem10 = new JMenuItem("neue Farbe");
+	private JMenuItem BearbeitenLoeschen = new JMenuItem("Loeschen");
+	private JMenuItem BearbeitenNeueFarbe = new JMenuItem("neue Farbe");
 
     private String[] Moebel = {"Stuhl", "Tisch", "Bett", "Schrank", "Schrankwand", "Sessel"};
     private JMenuItem[] Moebel_Items = new JMenuItem[Moebel.length];
 
 	public Gui(String title)
 	{
-		// Frame-Initialisierung
-        // myFrame = new JFrame(title);
-        // myFrame = new Leinwand(title, 600, 500, Color.white);
-
         myFrame = Leinwand.gibLeinwand();
 
         WindowListener windowListener = new WindowAdapter()
@@ -59,35 +58,38 @@ public class Gui
 		// Anfang Komponenten
 
 		myFrame.setJMenuBar(jmb);
-		jmb.add(jDateiMenu);
-		DateiJMenuItem1.addActionListener(new ActionListener()
+        jmb.add(GuiMenu);
+
+        // DateiMenu
+		jmb.add(DateiMenu);
+		DateiOeffnen.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				DateiJMenuItem1_ActionPerformed(evt);
+				DateiOeffnen_ActionPerformed(evt);
 			}
 		});
-		jDateiMenu.add(DateiJMenuItem1);
+		DateiMenu.add(DateiOeffnen);
 
-		DateiJMenuItem2.addActionListener(new ActionListener()
+		DateiSpeichern.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				DateiJMenuItem2_ActionPerformed(evt);
+				DateiSpeichern_ActionPerformed(evt);
 			}
 		});
-		jDateiMenu.add(DateiJMenuItem2);
+		DateiMenu.add(DateiSpeichern);
 
-		DateiJMenuItem3.addActionListener(new ActionListener()
+		DateiBeenden.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				DateiJMenuItem3_ActionPerformed(evt);
+				DateiBeenden_ActionPerformed(evt);
 			}
 		});
-		jDateiMenu.add(DateiJMenuItem3);
+		GuiMenu.add(DateiBeenden);
 
-		jmb.add(jBearbeitenMenu);
+		jmb.add(BearbeitenMenu);
 
 // ###############
 
@@ -160,38 +162,75 @@ public class Gui
         }
 
 // ###############
-        jBearbeitenMenu.add(NewMenu);
+        BearbeitenMenu.add(NewMenu);
 
-		jBearbeitenMenu.addSeparator();
-		BearbeitenJMenuItem8.addActionListener(new ActionListener()
+		BearbeitenMenu.addSeparator();
+		BearbeitenLoeschen.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				BearbeitenJMenuItem8_ActionPerformed(evt);
+				BearbeitenLoeschen_ActionPerformed(evt);
 			}
 		});
-		jBearbeitenMenu.add(BearbeitenJMenuItem8);
+		BearbeitenMenu.add(BearbeitenLoeschen);
 
 
-		BearbeitenJMenuItem10.addActionListener(new ActionListener()
+		BearbeitenNeueFarbe.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				BearbeitenJMenuItem10_ActionPerformed(evt);
+				BearbeitenNeueFarbe_ActionPerformed(evt);
 			}
 		});
-		jBearbeitenMenu.add(BearbeitenJMenuItem10);
+		BearbeitenMenu.add(BearbeitenNeueFarbe);
 
 		// Ende Komponenten
 
-		myFrame.setResizable(false);
+		myFrame.setResizable(true);
 		myFrame.setVisible(true);
 	}
 
+    public String[] listFilesForFolder(final File folder)
+    {
+        ArrayList<String> Files = new ArrayList<String>();
+
+        for (final File fileEntry : folder.listFiles())
+        {
+            if (fileEntry.isDirectory())
+            {
+                listFilesForFolder(fileEntry);
+            }
+            else
+            {
+                if (fileEntry.getName().endsWith(".save"))
+                {
+                    Files.add(fileEntry.getName());
+                }
+            }
+        }
+
+        return Files.toArray(new String[Files.size()]);
+    }
+
 	// Anfang Methoden
-	public void DateiJMenuItem1_ActionPerformed(ActionEvent evt)
+	public void DateiOeffnen_ActionPerformed(ActionEvent evt)
 	{
-		String dateiName = JOptionPane.showInputDialog("Datei:", "default.save");
+        String[] choices = listFilesForFolder(new File("."));
+
+        if (choices.length == 0) return;
+
+        // String[] choices = { "A", "B", "C", "D", "E", "F" };
+        String dateiName = (String) JOptionPane.showInputDialog(
+            null,
+            "Choose now...",
+            "Open",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            choices,
+            choices[0]
+        );
+
+		// String dateiName = JOptionPane.showInputDialog("Datei:", "default.save");
 		try
 		{
 				try
@@ -219,17 +258,17 @@ public class Gui
         }
 	}
 
-	public void DateiJMenuItem2_ActionPerformed(ActionEvent evt)
+	public void DateiSpeichern_ActionPerformed(ActionEvent evt)
 	{
-		String dateiName = JOptionPane.showInputDialog("Datei", "default.save");
+		String dateiName = JOptionPane.showInputDialog("Datei", "default");
 		try
         {
-            controller.sichern(dateiName);
+            controller.sichern(dateiName + ".save");
         }
 		catch (IOException e)
         {
             JOptionPane.showMessageDialog(null, "Datei nicht gefunden!");
-            System.err.println("DateiJMenuItem2_ActionPerformed: Datei nicht gefunden!");
+            System.err.println("DateiSpeichern_ActionPerformed: Datei nicht gefunden!");
         }
 	}
 
@@ -240,7 +279,7 @@ public class Gui
 		System.exit(0);
 	}
 
-	public void DateiJMenuItem3_ActionPerformed(ActionEvent evt)
+	public void DateiBeenden_ActionPerformed(ActionEvent evt)
 	{
         exit();
 	}
@@ -251,14 +290,25 @@ public class Gui
 		controller.neu(object);
 	}
 
-	public void BearbeitenJMenuItem8_ActionPerformed(ActionEvent evt)
+	public void BearbeitenLoeschen_ActionPerformed(ActionEvent evt)
 	{
 		controller.loeschen();
 	}
 
-	public void BearbeitenJMenuItem10_ActionPerformed(ActionEvent evt)
+	public void BearbeitenNeueFarbe_ActionPerformed(ActionEvent evt)
 	{
-		controller.aendereFarbe(JOptionPane.showInputDialog("Farbe:", ""));
+        String[] farben = {"schwarz", "rot", "blau", "gelb", "gruen", "lila", "weiss"};
+        String farbe = (String) JOptionPane.showInputDialog(
+            null,
+            "Choose now...",
+            "Color",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            farben,
+            farben[0]
+        );
+
+        controller.aendereFarbe(farbe);
 	}
 
 	// Ende Methoden
