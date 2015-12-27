@@ -83,12 +83,6 @@ public class Controller
 		 if (ausgewaehltes() != null) ausgewaehltes().bewegeHorizontal(weite);
 	}
 
-	// public void drehe(String inhalt)
-	// {
-	// 	 int winkel = StringToInt(inhalt);
-	// 	 if (ausgewaehltes() != null) ausgewaehltes().dreheAuf(winkel);
-	// }
-
 	public void drehe(int input)
 	{
 		 int original = ausgewaehltes().gibWinkel();

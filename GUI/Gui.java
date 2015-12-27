@@ -7,23 +7,24 @@ import java.util.ArrayList;
 
 public class Gui
 {
-    private JFrame myFrame;
+    private Leinwand myFrame = null;
 
 	private JMenuBar jmb = new JMenuBar();
 
     private JMenu GuiMenu = new JMenu("Gui");
-    private JMenuItem Size = new JMenuItem("Size");
-
+    private JMenuItem DateiBeenden = new JMenuItem("Beenden");
 
     private JMenu DateiMenu = new JMenu("Datei");
 	private JMenuItem DateiOeffnen = new JMenuItem("Oeffnen");
 	private JMenuItem DateiSpeichern = new JMenuItem("Speichern");
-	private JMenuItem DateiBeenden = new JMenuItem("Beenden");
 
     private JMenu BearbeitenMenu = new JMenu("Bearbeiten");
     private JMenu NewMenu = new JMenu("Neu");
-	private JMenuItem BearbeitenLoeschen = new JMenuItem("Loeschen");
+	private JMenuItem BearbeitenLoeschen  = new JMenuItem("Loeschen");
 	private JMenuItem BearbeitenNeueFarbe = new JMenuItem("neue Farbe");
+    private JMenuItem BearbeitenBackgroud = new JMenuItem("Hintergrund Farbe");
+
+    private JMenuItem BearbeitenResize = new JMenuItem("Resize");
 
     private String[] Moebel = {"Stuhl", "Tisch", "Bett", "Schrank", "Schrankwand", "Sessel"};
     private JMenuItem[] Moebel_Items = new JMenuItem[Moebel.length];
@@ -32,21 +33,35 @@ public class Gui
 	{
         myFrame = Leinwand.gibLeinwand();
 
-        WindowListener windowListener = new WindowAdapter()
+		myFrame.addWindowListener(new WindowAdapter()
         {
             @Override
             public void windowClosing(WindowEvent e)
             {
-                exit();
+                exit(0);
             }
-        };
+        });
 
-		myFrame.addWindowListener(windowListener);
-        ///myFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        myFrame.addComponentListener(new ComponentListener()
+        {
+           @Override
+           public void componentHidden(ComponentEvent e)
+           {}
 
-        // int frameWidth = 600;
-		// int frameHeight = 500;
-        // myFrame.setSize(frameWidth, frameHeight);
+           @Override
+           public void componentMoved(ComponentEvent e)
+           {}
+
+           @Override
+           public void componentResized(ComponentEvent e)
+           {
+            //    resize();
+           }
+
+           @Override
+           public void componentShown(ComponentEvent e)
+           {}
+        });
 
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = (d.width - myFrame.getSize().width) / 2;
@@ -55,6 +70,7 @@ public class Gui
 
 		// Container cp = myFrame.getContentPane();
 		// cp.setLayout(null);
+
 		// Anfang Komponenten
 
 		myFrame.setJMenuBar(jmb);
@@ -165,15 +181,26 @@ public class Gui
         BearbeitenMenu.add(NewMenu);
 
 		BearbeitenMenu.addSeparator();
-		BearbeitenLoeschen.addActionListener(new ActionListener()
+
+        BearbeitenResize.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				BearbeitenLoeschen_ActionPerformed(evt);
+				resize();
 			}
 		});
-		BearbeitenMenu.add(BearbeitenLoeschen);
+		BearbeitenMenu.add(BearbeitenResize);
 
+        BearbeitenBackgroud.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+				ChangeBackgroud();
+			}
+		});
+		BearbeitenMenu.add(BearbeitenBackgroud);
+
+        BearbeitenMenu.addSeparator();
 
 		BearbeitenNeueFarbe.addActionListener(new ActionListener()
 		{
@@ -183,6 +210,15 @@ public class Gui
 			}
 		});
 		BearbeitenMenu.add(BearbeitenNeueFarbe);
+
+        BearbeitenLoeschen.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+				BearbeitenLoeschen_ActionPerformed(evt);
+			}
+		});
+		BearbeitenMenu.add(BearbeitenLoeschen);
 
 		// Ende Komponenten
 
@@ -272,16 +308,16 @@ public class Gui
         }
 	}
 
-    public void exit()
+    public void exit(int status)
 	{
 		Leinwand lw = Leinwand.gibLeinwand();
 		lw.setzeSichtbarkeit(false);
-		System.exit(0);
+		System.exit(status);
 	}
 
 	public void DateiBeenden_ActionPerformed(ActionEvent evt)
 	{
-        exit();
+        exit(0);
 	}
 
 	Controller controller = Controller.gibController();
@@ -294,6 +330,17 @@ public class Gui
 	{
 		controller.loeschen();
 	}
+
+    public void resize()
+    {
+        myFrame.resize();
+    }
+
+    public void ChangeBackgroud()
+    {
+        myFrame.setBackground(Color.YELLOW);
+        myFrame.pack();
+    }
 
 	public void BearbeitenNeueFarbe_ActionPerformed(ActionEvent evt)
 	{
@@ -308,7 +355,10 @@ public class Gui
             farben[0]
         );
 
-        controller.aendereFarbe(farbe);
+        if (farbe != null)
+        {
+            controller.aendereFarbe(farbe);
+        }
 	}
 
 	// Ende Methoden

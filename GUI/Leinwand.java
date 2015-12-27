@@ -62,7 +62,6 @@ public class Leinwand extends JFrame
 	private List<Object> figuren;
 	private Map<Object, ShapeMitFarbe> figurZuShape; // Abbildung von Figuren zu Shapes
 
-	private Dimension frame_dimension;
 	private boolean jumping_contorl = false;
 
 	/**
@@ -119,7 +118,7 @@ public class Leinwand extends JFrame
 		zeichenflaeche.addMouseWheelListener(mouseWheel);
 
 		setLayout(null);
-		setResizable(true);
+		setResizable(false);
 		setContentPane(zeichenflaeche);
 		setTitle(titel);
 
@@ -130,11 +129,7 @@ public class Leinwand extends JFrame
 
 		figuren = new ArrayList<Object>();
 		figurZuShape = new HashMap<Object, ShapeMitFarbe>();
-
-		// null pointer warning
-		frame_dimension = new Dimension(getWidth(), getHeight());
 	}
-
 
 	/**
 	 * Setze, ob diese Leinwand sichtbar sein soll oder nicht. Wenn die
@@ -147,17 +142,20 @@ public class Leinwand extends JFrame
 	 */
 	public void setzeSichtbarkeit(boolean sichtbar)
 	{
-    	if (graphic == null)
-    	{
-    		// erstmaliger Aufruf: erzeuge das Bildschirm-Image und f�lle
+    	// if (graphic == null)
+    	// {
+    		// erstmaliger Aufruf: erzeuge das Bildschirm-Image und flle
     		// es mit der Hintergrundfarbe
     		Dimension size = zeichenflaeche.getSize();
-    		leinwandImage = zeichenflaeche.createImage(size.width, size.height);
+			// leinwandImage = zeichenflaeche.createImage(size.width, size.height);
+    		leinwandImage = zeichenflaeche.createImage(getWidth(), getHeight());
     		graphic = (Graphics2D) leinwandImage.getGraphics();
     		graphic.setColor(hintergrundfarbe);
     		graphic.fillRect(0, 0, size.width, size.height);
     		graphic.setColor(Color.black);
-    	}
+
+			System.out.printf("New leinwandImage: %d %d\n", size.width, size.height);
+    	// }
 
     	setVisible(sichtbar);
     	// fenster.setVisible(sichtbar);
@@ -175,7 +173,7 @@ public class Leinwand extends JFrame
 	public void zeichne(Object figur, String farbe, Shape shape)
 	{
     	figuren.remove(figur); // entfernen, falls schon eingetragen
-    	figuren.add(figur); // am Ende hinzuf�gen
+    	figuren.add(figur); // am Ende hinzufgen
     	figurZuShape.put(figur, new ShapeMitFarbe(shape, farbe));
     	erneutZeichnen();
 	}
@@ -266,6 +264,28 @@ public class Leinwand extends JFrame
 		Dimension size = zeichenflaeche.getSize();
 		graphic.fill(new Rectangle(0, 0, size.width, size.height));
 		graphic.setColor(original);
+	}
+
+	public void resize()
+	{
+		// Container cp = getContentPane();
+		// cp.setLayout(null);
+		// cp.setPreferredSize(new Dimension(myFrame.getWidth(), myFrame.getHeight()));
+		// cp.setSize(new Dimension(getWidth(), getHeight()));
+		// cp.setPreferredSize(new Dimension(100, 200));
+		// cp.setSize(new Dimension(100, 100));
+		// myFrame.setPreferredSize(new Dimension(myFrame.getWidth(), myFrame.getHeight()));
+		// myFrame.setSize(new Dimension(myFrame.getWidth(), myFrame.getHeight()));
+		// myFrame.repaint();
+		// myFrame.revalidate();
+		// myFrame.pack();
+
+		// myFrame.pack();
+		setzeSichtbarkeit(true);
+		pack();
+
+		System.out.printf("Resize: %d %d\n", getWidth(), getHeight());
+
 	}
 
 	/************************************************************************

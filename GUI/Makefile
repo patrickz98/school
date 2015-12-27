@@ -12,10 +12,7 @@ clean:
 clean-save:
 	find . -name "*.save" -delete
 
-run-linux: clean javac
-	java -cp . Gui
-
 run: clean javac
-	java Gui
+	java -cp . Gui
 
 default: javac
