@@ -11,22 +11,31 @@ public class Gui
 
 	private JMenuBar jmb = new JMenuBar();
 
-    private JMenu GuiMenu = new JMenu("Gui");
+    private JMenu     GuiMenu      = new JMenu("Gui");
     private JMenuItem DateiBeenden = new JMenuItem("Beenden");
 
-    private JMenu DateiMenu = new JMenu("Datei");
-	private JMenuItem DateiOeffnen = new JMenuItem("Oeffnen");
+    private JMenu     DateiMenu      = new JMenu("Datei");
+	private JMenuItem DateiOeffnen   = new JMenuItem("Oeffnen");
 	private JMenuItem DateiSpeichern = new JMenuItem("Speichern");
 
-    private JMenu BearbeitenMenu = new JMenu("Bearbeiten");
-    private JMenu NewMenu = new JMenu("Neu");
+    private JMenu     BearbeitenMenu      = new JMenu("Bearbeiten");
+    private JMenu     NewMenu             = new JMenu("Neu");
 	private JMenuItem BearbeitenLoeschen  = new JMenuItem("Loeschen");
 	private JMenuItem BearbeitenNeueFarbe = new JMenuItem("neue Farbe");
     private JMenuItem BearbeitenBackgroud = new JMenuItem("Hintergrund Farbe");
 
-    private JMenuItem BearbeitenResize = new JMenuItem("Resize");
+    // private JMenuItem BearbeitenResize = new JMenuItem("Resize");
 
-    private String[] Moebel = {"Stuhl", "Tisch", "Bett", "Schrank", "Schrankwand", "Sessel"};
+    private String[] Moebel =
+    {
+        "Stuhl",
+        "Tisch",
+        "Bett",
+        "Schrank",
+        "Schrankwand",
+        "Sessel"
+    };
+
     private JMenuItem[] Moebel_Items = new JMenuItem[Moebel.length];
 
 	public Gui(String title)
@@ -42,27 +51,6 @@ public class Gui
             }
         });
 
-        myFrame.addComponentListener(new ComponentListener()
-        {
-           @Override
-           public void componentHidden(ComponentEvent e)
-           {}
-
-           @Override
-           public void componentMoved(ComponentEvent e)
-           {}
-
-           @Override
-           public void componentResized(ComponentEvent e)
-           {
-            //    resize();
-           }
-
-           @Override
-           public void componentShown(ComponentEvent e)
-           {}
-        });
-
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = (d.width - myFrame.getSize().width) / 2;
 		int y = (d.height - myFrame.getSize().height) / 2;
@@ -71,12 +59,13 @@ public class Gui
 		// Container cp = myFrame.getContentPane();
 		// cp.setLayout(null);
 
-		// Anfang Komponenten
-
 		myFrame.setJMenuBar(jmb);
         jmb.add(GuiMenu);
 
-        // DateiMenu
+        //
+        // ################### Menu ###################
+        //
+
 		jmb.add(DateiMenu);
 		DateiOeffnen.addActionListener(new ActionListener()
 		{
@@ -106,8 +95,6 @@ public class Gui
 		GuiMenu.add(DateiBeenden);
 
 		jmb.add(BearbeitenMenu);
-
-// ###############
 
         for (int z = 0; z < Moebel.length; z++)
         {
@@ -177,30 +164,18 @@ public class Gui
             NewMenu.add(Moebel_Items[z]);
         }
 
-// ###############
         BearbeitenMenu.add(NewMenu);
 
 		BearbeitenMenu.addSeparator();
 
-        BearbeitenResize.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				resize();
-			}
-		});
-		BearbeitenMenu.add(BearbeitenResize);
-
-        BearbeitenBackgroud.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				ChangeBackgroud();
-			}
-		});
-		BearbeitenMenu.add(BearbeitenBackgroud);
-
-        BearbeitenMenu.addSeparator();
+        // BearbeitenResize.addActionListener(new ActionListener()
+		// {
+		// 	public void actionPerformed(ActionEvent evt)
+		// 	{
+		// 		myFrame.resize();
+		// 	}
+		// });
+		// BearbeitenMenu.add(BearbeitenResize);
 
 		BearbeitenNeueFarbe.addActionListener(new ActionListener()
 		{
@@ -220,21 +195,18 @@ public class Gui
 		});
 		BearbeitenMenu.add(BearbeitenLoeschen);
 
-		// Ende Komponenten
-
-		myFrame.setResizable(true);
 		myFrame.setVisible(true);
 	}
 
-    public String[] listFilesForFolder(final File folder)
+    public String[] listdir(final File folder)
     {
         ArrayList<String> Files = new ArrayList<String>();
 
-        for (final File fileEntry : folder.listFiles())
+        for (final File fileEntry: folder.listFiles())
         {
             if (fileEntry.isDirectory())
             {
-                listFilesForFolder(fileEntry);
+                listdir(fileEntry);
             }
             else
             {
@@ -251,12 +223,12 @@ public class Gui
 	// Anfang Methoden
 	public void DateiOeffnen_ActionPerformed(ActionEvent evt)
 	{
-        String[] choices = listFilesForFolder(new File("."));
+        String[] choices = listdir(new File("."));
 
         if (choices.length == 0) return;
 
-        // String[] choices = { "A", "B", "C", "D", "E", "F" };
-        String dateiName = (String) JOptionPane.showInputDialog(
+        String dateiName = (String) JOptionPane.showInputDialog
+        (
             null,
             "Choose now...",
             "Open",
@@ -266,7 +238,6 @@ public class Gui
             choices[0]
         );
 
-		// String dateiName = JOptionPane.showInputDialog("Datei:", "default.save");
 		try
 		{
 				try
@@ -277,20 +248,21 @@ public class Gui
 						}
                         catch (ClassNotFoundException e)
                         {
+                            // wtf Klasse gibt es nicht?
                             JOptionPane.showMessageDialog(null, "Klasse gibt es nicht!");
-                            System.err.println("Klasse gibt es nicht!");
+                            System.err.println("++> DateiOeffnen_ActionPerformed: Klasse gibt es nicht!");
                         }
 				}
                 catch (FileNotFoundException e)
                 {
                     JOptionPane.showMessageDialog(null, "Datei nicht gefunden!");
-                    System.err.println("Datei nicht gefunden!");
+                    System.err.println("++> DateiOeffnen_ActionPerformed: Datei nicht gefunden!");
                 }
 		}
         catch (IOException e)
         {
             JOptionPane.showMessageDialog(null, "E/A-Fehler!");
-            System.err.println("E/A-Fehler!");
+            System.err.println("++> DateiOeffnen_ActionPerformed: IOException");
         }
 	}
 
@@ -299,12 +271,20 @@ public class Gui
 		String dateiName = JOptionPane.showInputDialog("Datei", "default");
 		try
         {
-            controller.sichern(dateiName + ".save");
+            if (dateiName.equals(""))
+            {
+                controller.sichern("default.save");
+                System.out.println("--> saved default.save");
+            }
+            else
+            {
+                controller.sichern(dateiName + ".save");
+                System.out.printf("--> saved %s.save", dateiName);
+            }
         }
 		catch (IOException e)
         {
-            JOptionPane.showMessageDialog(null, "Datei nicht gefunden!");
-            System.err.println("DateiSpeichern_ActionPerformed: Datei nicht gefunden!");
+            System.err.println("++> DateiSpeichern_ActionPerformed: IOException");
         }
 	}
 
@@ -331,21 +311,21 @@ public class Gui
 		controller.loeschen();
 	}
 
-    public void resize()
+    private String ChooseColor()
     {
-        myFrame.resize();
-    }
+        String[] farben =
+        {
+            "schwarz",
+            "rot",
+            "blau",
+            "gelb",
+            "gruen",
+            "lila",
+            "weiss"
+        };
 
-    public void ChangeBackgroud()
-    {
-        myFrame.setBackground(Color.YELLOW);
-        myFrame.pack();
-    }
-
-	public void BearbeitenNeueFarbe_ActionPerformed(ActionEvent evt)
-	{
-        String[] farben = {"schwarz", "rot", "blau", "gelb", "gruen", "lila", "weiss"};
-        String farbe = (String) JOptionPane.showInputDialog(
+        String farbe = (String) JOptionPane.showInputDialog
+        (
             null,
             "Choose now...",
             "Color",
@@ -354,6 +334,13 @@ public class Gui
             farben,
             farben[0]
         );
+
+        return farbe;
+    }
+
+	public void BearbeitenNeueFarbe_ActionPerformed(ActionEvent evt)
+	{
+        String farbe = ChooseColor();
 
         if (farbe != null)
         {
@@ -365,6 +352,30 @@ public class Gui
 
 	public static void main(String[] args)
 	{
+        // test thead
+        Runnable myController = new Runnable()
+        {
+            public void run()
+            {
+                for (int x = 0; x < 100; x++)
+                {
+                    System.out.printf("Hello from a thread! --> %d\n", x);
+
+                    try
+                    {
+                        Thread.sleep(1000);
+                    }
+                    catch (Exception e)
+                    {
+                        // Exception ignorieren
+                    }
+                }
+            }
+        };
+
+        Thread myThread = new Thread(myController);
+        // myThread.start();
+
 		new Gui("Gui");
 	}
 }

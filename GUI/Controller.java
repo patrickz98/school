@@ -16,7 +16,6 @@ public class Controller
 		Leinwand.gibLeinwand().setzeSichtbarkeit(false);
 	}
 
-    // Instanzen:
 	private ArrayList<Moebel> moebel = null;
 	private int ausgewaehlt;
 
@@ -109,6 +108,7 @@ public class Controller
 		}
 		return aktuell;
 	}
+
 	public String naechstes()
 	{
 		String aktuell = "keines";
@@ -136,15 +136,15 @@ public class Controller
 	 * Maussteuerung
 	 */
 	private int xMaus = 0;
-	private int yMaus = 0;	// sichert die letzte Mausposition
-    public void mausposition(int x,int y)
+	private int yMaus = 0;
+    public void mausposition(int x, int y)
 	{
 		if (moebel.size() == 0) return;
-        for (int i=0; i < moebel.size(); i++)
-        if ((x > moebel.get(i).gibUmriss().getBounds2D().getX())
-				 && (x < moebel.get(i).gibUmriss().getBounds2D().getMaxX())
-				 && (y > moebel.get(i).gibUmriss().getBounds2D().getY())
-				 && (y < moebel.get(i).gibUmriss().getBounds2D().getMaxY()))
+        for (int i = 0; i < moebel.size(); i++)
+		if ((x > moebel.get(i).gibUmriss().getBounds2D().getX()) &&
+			(x < moebel.get(i).gibUmriss().getBounds2D().getMaxX()) &&
+			(y > moebel.get(i).gibUmriss().getBounds2D().getY()) &&
+			(y < moebel.get(i).gibUmriss().getBounds2D().getMaxY()))
 		{
 			 ausgewaehlt = i;
 			 xMaus = x;
@@ -154,34 +154,34 @@ public class Controller
 	public void angeklickt(int x, int y)
 	{
 		if (moebel.size() == 0) return;
-		for (int i=0; i < moebel.size(); i++)
-		if ((x > moebel.get(i).gibUmriss().getBounds2D().getX())
-				 && (x < moebel.get(i).gibUmriss().getBounds2D().getMaxX())
-				 && (y > moebel.get(i).gibUmriss().getBounds2D().getY())
-				 && (y < moebel.get(i).gibUmriss().getBounds2D().getMaxY()))
+		for (int i = 0; i < moebel.size(); i++)
+		if ((x > moebel.get(i).gibUmriss().getBounds2D().getX()) &&
+			(x < moebel.get(i).gibUmriss().getBounds2D().getMaxX()) &&
+			(y > moebel.get(i).gibUmriss().getBounds2D().getY()) &&
+			(y < moebel.get(i).gibUmriss().getBounds2D().getMaxY()))
 		{
 			 ausgewaehlt = i;
-			 xMaus=x;
-			 yMaus=y;
+			 xMaus = x;
+			 yMaus = y;
 		}
 	}
 
 	public void verschiebeAuf(int x, int y)
 	{
-		ausgewaehltes().bewegeHorizontal(x-xMaus);
-		ausgewaehltes().bewegeVertikal(y-yMaus);
-		xMaus=x;
-		yMaus=y;
+		ausgewaehltes().bewegeHorizontal(x - xMaus);
+		ausgewaehltes().bewegeVertikal(y - yMaus);
+		xMaus = x;
+		yMaus = y;
 	}
 
     public boolean touched(int x, int y)
     {
         if (moebel.size() == 0) return false;
-		for (int i=0; i < moebel.size(); i++)
-		if ((x > moebel.get(i).gibUmriss().getBounds2D().getX())
-				 && (x < moebel.get(i).gibUmriss().getBounds2D().getMaxX())
-				 && (y > moebel.get(i).gibUmriss().getBounds2D().getY())
-				 && (y < moebel.get(i).gibUmriss().getBounds2D().getMaxY()))
+		for (int i = 0; i < moebel.size(); i++)
+		if ((x > moebel.get(i).gibUmriss().getBounds2D().getX()) &&
+			(x < moebel.get(i).gibUmriss().getBounds2D().getMaxX()) &&
+			(y > moebel.get(i).gibUmriss().getBounds2D().getY()) &&
+			(y < moebel.get(i).gibUmriss().getBounds2D().getMaxY()))
 		{
             return true;
 		}
@@ -238,9 +238,9 @@ public class Controller
 
             if (!fertig)
 			{
-					moebel.add(obj);
-					obj.verberge(); // notwendig um zunaechst das Attribut sichtbar auf false zu setzen
-					obj.zeige();
+				moebel.add(obj);
+				obj.verberge(); // notwendig um zunaechst das Attribut sichtbar auf false zu setzen
+				obj.zeige();
 			}
 		}
 		eingabe.close();
@@ -248,13 +248,14 @@ public class Controller
 
 	public int StringToInt(String inhalt)
 	{
-		int wert = 0;
+		int wert = -1;
 		try
 		{
-            wert = Integer.parseInt(inhalt);
-		} catch (NumberFormatException e)
+        	wert = Integer.parseInt(inhalt);
+		}
+		catch (NumberFormatException e)
 		{
-			 // wert bleibt 0
+			 // wert bleibt -1
 		}
 		return wert;
 	}

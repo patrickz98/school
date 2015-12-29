@@ -15,4 +15,4 @@ clean-save:
 run: clean javac
 	java -cp . Gui
 
-default: javac
+default: run

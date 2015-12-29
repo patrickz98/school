@@ -20,28 +20,15 @@ import java.io.*;
 /**
  * Leinwand ist eine Klasse, die einfache Zeichenoperationen auf einer
  * leinwandartigen Zeichenflaeche ermoeglicht.
- * Sie ist eine vereinfachte Version der Klasse Canvas (englisch f�r
- * Leinwand) des JDK und wurde speziell fr das Projekt "Figuren"
+ * Sie ist eine vereinfachte Version der Klasse Canvas (englisch fr
+ * Leinwand) des JDK und wurde speziell fuer das Projekt "Figuren"
  * geschrieben.
- * @version: 1.7 (5.12.2003)
  */
 public class Leinwand extends JFrame
 {
-	// Hinweis: Die Implementierung dieser Klasse (insbesondere die
-	// Verwaltung der Farben und Identitaeten der Figuren) ist etwas
-	// komplizierter als notwendig. Dies ist absichtlich so, weil damit
-	// die Schnittstellen und Exemplarvariablen der Figuren-Klassen
-	// fr den Lernanspruch dieses Projekts einfacher und klarer
-	// sein knnen.
-
 	private static Leinwand leinwandSingleton;
 
-	/**
-	 * Fabrikmethode, die eine Referenz auf das einzige Exemplar
-	 * dieser Klasse zurueckliefert. Wenn es von einer Klasse nur
-	 * genau ein Exemplar gibt, wird dieses als 'Singleton'
-	 * bezeichnet.
-	 */
+	// Leinwand Singleton
 	public static Leinwand gibLeinwand()
 	{
 		if (leinwandSingleton == null)
@@ -52,9 +39,6 @@ public class Leinwand extends JFrame
 		return leinwandSingleton;
 	}
 
-	//	----- Exemplarvariablen -----
-
-	//private JFrame fenster;
 	private Zeichenflaeche zeichenflaeche;
 	private Graphics2D graphic;
 	private Color hintergrundfarbe;
@@ -74,9 +58,8 @@ public class Leinwand extends JFrame
 	public Leinwand(String titel, int breite, int hoehe, Color grundfarbe)
 	{
 		super(titel);
-		// fenster = new JFrame();
-
 		zeichenflaeche = new Zeichenflaeche();
+
 		MouseWheelListener mouseWheel = new MouseWheelListener()
 		{
 			public void mouseWheelMoved(MouseWheelEvent e)
@@ -97,28 +80,56 @@ public class Leinwand extends JFrame
 				Controller.gibController().angeklickt(e.getX(), e.getY());
 			}
 
-			// jumping objects #bug fixed
+			// jumping objects #bug
 			public void mouseDragged(MouseEvent e)
 			{
+				// System.out.println("--> mouseDragged");
 				if (Controller.gibController().touched(e.getX(), e.getY()) || jumping_contorl)
 				{
 					Controller.gibController().verschiebeAuf(e.getX(), e.getY());
 					jumping_contorl = true;
 				}
+				else
+				{
+					jumping_contorl = false;
+				}
 			}
 
 			public void mousePressed(MouseEvent e)
 			{
+				// System.out.println("--> mousePressed");
 				Controller.gibController().mausposition(e.getX(), e.getY());
 			}
 		};
 
+		ComponentListener componentlister = new ComponentListener()
+        {
+           @Override
+           public void componentHidden(ComponentEvent e)
+           {}
+
+           @Override
+           public void componentMoved(ComponentEvent e)
+           {}
+
+           @Override
+           public void componentResized(ComponentEvent e)
+           {
+               resize();
+           }
+
+           @Override
+           public void componentShown(ComponentEvent e)
+           {}
+        };
+
+		zeichenflaeche.addComponentListener(componentlister);
 		zeichenflaeche.addMouseListener(mouseAdapter);
 		zeichenflaeche.addMouseMotionListener(mouseAdapter);
 		zeichenflaeche.addMouseWheelListener(mouseWheel);
 
 		setLayout(null);
-		setResizable(false);
+		setResizable(true);
 		setContentPane(zeichenflaeche);
 		setTitle(titel);
 
@@ -142,23 +153,21 @@ public class Leinwand extends JFrame
 	 */
 	public void setzeSichtbarkeit(boolean sichtbar)
 	{
+		// removed if-loop to make the jframe resizable
     	// if (graphic == null)
-    	// {
-    		// erstmaliger Aufruf: erzeuge das Bildschirm-Image und flle
-    		// es mit der Hintergrundfarbe
-    		Dimension size = zeichenflaeche.getSize();
-			// leinwandImage = zeichenflaeche.createImage(size.width, size.height);
-    		leinwandImage = zeichenflaeche.createImage(getWidth(), getHeight());
-    		graphic = (Graphics2D) leinwandImage.getGraphics();
-    		graphic.setColor(hintergrundfarbe);
-    		graphic.fillRect(0, 0, size.width, size.height);
-    		graphic.setColor(Color.black);
+    	// {}
 
-			System.out.printf("New leinwandImage: %d %d\n", size.width, size.height);
-    	// }
+		// erstmaliger Aufruf: erzeuge das Bildschirm-Image und fuelle
+		// es mit der Hintergrundfarbe
+		Dimension size = zeichenflaeche.getSize();
+		leinwandImage = zeichenflaeche.createImage(getWidth(), getHeight());
+		graphic = (Graphics2D) leinwandImage.getGraphics();
+		graphic.setColor(hintergrundfarbe);
+		graphic.fillRect(0, 0, size.width, size.height);
+		graphic.setColor(Color.black);
+		erneutZeichnen();
 
     	setVisible(sichtbar);
-    	// fenster.setVisible(sichtbar);
 	}
 
 	/**
@@ -189,38 +198,45 @@ public class Leinwand extends JFrame
     	erneutZeichnen();
 	}
 
+	public Color StringToColor(String color)
+	{
+		Color newColor = Color.black;
+		switch (color)
+		{
+			case "rot":
+				newColor = Color.red;
+				break;
+			case "schwarz":
+				newColor = Color.black;
+				break;
+			case "blau":
+				newColor = Color.blue;
+				break;
+			case "gelb":
+				newColor = Color.yellow;
+				break;
+			case "gruen":
+				newColor = Color.green;
+				break;
+			case "lila":
+				newColor = Color.magenta;
+				break;
+			case "weiss":
+				newColor = Color.white;
+				break;
+			default:
+				newColor = Color.black;
+		}
+		return newColor;
+	}
+
 	/**
 	 * Setze die Zeichenfarbe der Leinwand.
 	 * @param	farbname der Name der neuen Zeichenfarbe.
 	 */
 	public void setzeZeichenfarbe(String farbname)
 	{
-        switch (farbname)
-        {
-    		case "rot":
-                graphic.setColor(Color.red);
-                break;
-    		case "schwarz":
-				graphic.setColor(Color.black);
-				break;
-    		case "blau":
-				graphic.setColor(Color.blue);
-				break;
-    		case "gelb":
-				graphic.setColor(Color.yellow);
-				break;
-            case "gruen":
-                graphic.setColor(Color.green);
-                break;
-            case "lila":
-				graphic.setColor(Color.magenta);
-				break;
-            case "weiss":
-    			graphic.setColor(Color.white);
-    			break;
-    		default:
-                graphic.setColor(Color.black);
-        }
+		graphic.setColor(StringToColor(farbname));
 	}
 
 	/**
@@ -268,24 +284,11 @@ public class Leinwand extends JFrame
 
 	public void resize()
 	{
-		// Container cp = getContentPane();
-		// cp.setLayout(null);
-		// cp.setPreferredSize(new Dimension(myFrame.getWidth(), myFrame.getHeight()));
-		// cp.setSize(new Dimension(getWidth(), getHeight()));
-		// cp.setPreferredSize(new Dimension(100, 200));
-		// cp.setSize(new Dimension(100, 100));
-		// myFrame.setPreferredSize(new Dimension(myFrame.getWidth(), myFrame.getHeight()));
-		// myFrame.setSize(new Dimension(myFrame.getWidth(), myFrame.getHeight()));
-		// myFrame.repaint();
-		// myFrame.revalidate();
-		// myFrame.pack();
-
-		// myFrame.pack();
 		setzeSichtbarkeit(true);
+		this.setPreferredSize(new Dimension(getWidth(), getHeight()));
 		pack();
 
-		System.out.printf("Resize: %d %d\n", getWidth(), getHeight());
-
+		System.out.printf("--> resized window x:%d y:%d\n", getWidth(), getHeight());
 	}
 
 	/************************************************************************
