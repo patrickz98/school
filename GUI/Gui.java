@@ -20,11 +20,9 @@ public class Gui
 
     private JMenu     BearbeitenMenu      = new JMenu("Bearbeiten");
     private JMenu     NewMenu             = new JMenu("Neu");
-	private JMenuItem BearbeitenLoeschen  = new JMenuItem("Loeschen");
-	private JMenuItem BearbeitenNeueFarbe = new JMenuItem("neue Farbe");
-    private JMenuItem BearbeitenBackgroud = new JMenuItem("Hintergrund Farbe");
-
-    // private JMenuItem BearbeitenResize = new JMenuItem("Resize");
+	private JMenuItem BearbeitenNeueFarbe = new JMenuItem("Neue Farbe");
+    private JMenuItem BearbeitenLoeschen  = new JMenuItem("Objekt Loeschen");
+    private JMenuItem BearbeitenDeleteBG  = new JMenuItem("Hintergrund Loeschen");
 
     private String[] Moebel =
     {
@@ -80,7 +78,7 @@ public class Gui
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				DateiSpeichern_ActionPerformed(evt);
+				DateiSpeichern_ActionPerformed(false);
 			}
 		});
 		DateiMenu.add(DateiSpeichern);
@@ -168,15 +166,6 @@ public class Gui
 
 		BearbeitenMenu.addSeparator();
 
-        // BearbeitenResize.addActionListener(new ActionListener()
-		// {
-		// 	public void actionPerformed(ActionEvent evt)
-		// 	{
-		// 		myFrame.resize();
-		// 	}
-		// });
-		// BearbeitenMenu.add(BearbeitenResize);
-
 		BearbeitenNeueFarbe.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
@@ -194,6 +183,15 @@ public class Gui
 			}
 		});
 		BearbeitenMenu.add(BearbeitenLoeschen);
+
+        BearbeitenDeleteBG.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+				BearbeitenDeleteBG_ActionPerformed(evt);
+			}
+		});
+		BearbeitenMenu.add(BearbeitenDeleteBG);
 
 		myFrame.setVisible(true);
 	}
@@ -220,67 +218,92 @@ public class Gui
         return Files.toArray(new String[Files.size()]);
     }
 
-	// Anfang Methoden
 	public void DateiOeffnen_ActionPerformed(ActionEvent evt)
 	{
         String[] choices = listdir(new File("."));
 
-        if (choices.length == 0) return;
+        if (choices.length == 0)
+        {
+            System.err.println("++> no files available");
+            JOptionPane.showConfirmDialog(
+                null,
+                "no files available",
+                "Oeffnen",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+            return;
+        }
 
         String dateiName = (String) JOptionPane.showInputDialog
         (
             null,
             "Choose now...",
-            "Open",
+            "Oeffnen",
             JOptionPane.QUESTION_MESSAGE,
             null,
             choices,
             choices[0]
         );
 
-		try
-		{
-				try
-				{
-						try
-                        {
-                            controller.holen(dateiName);
-						}
-                        catch (ClassNotFoundException e)
-                        {
-                            // wtf Klasse gibt es nicht?
-                            JOptionPane.showMessageDialog(null, "Klasse gibt es nicht!");
-                            System.err.println("++> DateiOeffnen_ActionPerformed: Klasse gibt es nicht!");
-                        }
-				}
+        if ((dateiName != null) && (dateiName.length() > 0))
+        {
+            System.out.println("--> open: " + dateiName);
+
+            try
+    		{
+    			try
+    			{
+    			    try
+                    {
+                        controller.holen(dateiName);
+    				}
+                    catch (ClassNotFoundException e)
+                    {
+                        // wtf Klasse gibt es nicht?
+                        JOptionPane.showMessageDialog(null, "Klasse gibt es nicht!");
+                        System.err.println("++> DateiOeffnen_ActionPerformed: Klasse gibt es nicht!");
+                    }
+    			}
                 catch (FileNotFoundException e)
                 {
                     JOptionPane.showMessageDialog(null, "Datei nicht gefunden!");
                     System.err.println("++> DateiOeffnen_ActionPerformed: Datei nicht gefunden!");
                 }
-		}
-        catch (IOException e)
+    		}
+            catch (IOException e)
+            {
+                JOptionPane.showMessageDialog(null, "E/A-Fehler!");
+                System.err.println("++> DateiOeffnen_ActionPerformed: IOException");
+            }
+        }
+        else
         {
-            JOptionPane.showMessageDialog(null, "E/A-Fehler!");
-            System.err.println("++> DateiOeffnen_ActionPerformed: IOException");
+            System.err.println("++> no file select");
         }
 	}
 
-	public void DateiSpeichern_ActionPerformed(ActionEvent evt)
+	public void DateiSpeichern_ActionPerformed(boolean evt)
 	{
-		String dateiName = JOptionPane.showInputDialog("Datei", "default");
+        String dateiName = "default";
+        if (!evt)
+        {
+            dateiName = JOptionPane.showInputDialog("Datei", "default");
+
+            // Cancel evt
+            if (dateiName == null)
+            {
+                return;
+            }
+        }
+        else
+        {
+            dateiName = "autosave";
+        }
+
 		try
         {
-            if (dateiName.equals(""))
-            {
-                controller.sichern("default.save");
-                System.out.println("--> saved default.save");
-            }
-            else
-            {
-                controller.sichern(dateiName + ".save");
-                System.out.printf("--> saved %s.save", dateiName);
-            }
+            controller.sichern(dateiName + ".save");
+            System.out.printf("--> saved: %s.save\n", dateiName);
         }
 		catch (IOException e)
         {
@@ -290,6 +313,10 @@ public class Gui
 
     public void exit(int status)
 	{
+        // last save
+        DateiSpeichern_ActionPerformed(true);
+
+        // exit
 		Leinwand lw = Leinwand.gibLeinwand();
 		lw.setzeSichtbarkeit(false);
 		System.exit(status);
@@ -310,6 +337,11 @@ public class Gui
 	{
 		controller.loeschen();
 	}
+
+    public void BearbeitenDeleteBG_ActionPerformed(ActionEvent evt)
+    {
+        controller.AlleLoeschen();
+    }
 
     private String ChooseColor()
     {
@@ -348,34 +380,31 @@ public class Gui
         }
 	}
 
-	// Ende Methoden
-
 	public static void main(String[] args)
 	{
-        // test thead
+        final Gui myGui = new Gui("Gui");
+
+        // Autosave thead
         Runnable myController = new Runnable()
         {
             public void run()
             {
-                for (int x = 0; x < 100; x++)
+                while (true)
                 {
-                    System.out.printf("Hello from a thread! --> %d\n", x);
-
                     try
                     {
-                        Thread.sleep(1000);
+                        // Autosave delay: 15s
+                        Thread.sleep(15000);
                     }
                     catch (Exception e)
-                    {
-                        // Exception ignorieren
-                    }
+                    {}
+
+                    myGui.DateiSpeichern_ActionPerformed(true);
                 }
             }
         };
 
-        Thread myThread = new Thread(myController);
-        // myThread.start();
-
-		new Gui("Gui");
+        Thread autosaveThread = new Thread(myController);
+        autosaveThread.start();
 	}
 }

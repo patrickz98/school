@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.*;
 import java.io.*;
 
 public class Controller
@@ -125,12 +125,25 @@ public class Controller
 	{
 		 if (ausgewaehlt >= 0)
 		 {
+			 System.out.println("--> Delete: " + ausgewaehltes().getClass().getName());
 			 ausgewaehltes().verberge();
 			 moebel.remove(ausgewaehltes());
 			 if (moebel.size() == 0) ausgewaehlt = -1;
 			 else if (ausgewaehlt >= moebel.size()) ausgewaehlt = 0;
 		 }
 	}
+
+	public void AlleLoeschen()
+	{
+		System.out.println("--> Clean backgroud: " + moebel.size() + " objects");
+		for (Iterator<Moebel> i = moebel.iterator(); i.hasNext();)
+		{
+			i.next().verberge();
+		}
+		moebel.clear();
+		ausgewaehlt = -1;
+	}
+
 
 	/**
 	 * Maussteuerung
@@ -188,9 +201,8 @@ public class Controller
         return false;
     }
 
-
 	/**
-	 * Dateizugriffe
+	 * Dateizugriff Speichern
 	 */
 	public void sichern(String dateiName)
 	throws IOException, FileNotFoundException

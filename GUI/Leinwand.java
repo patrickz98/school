@@ -60,7 +60,7 @@ public class Leinwand extends JFrame
 		super(titel);
 		zeichenflaeche = new Zeichenflaeche();
 
-		MouseWheelListener mouseWheel = new MouseWheelListener()
+		MouseWheelListener myMouseWheel = new MouseWheelListener()
 		{
 			public void mouseWheelMoved(MouseWheelEvent e)
 			{
@@ -68,7 +68,7 @@ public class Leinwand extends JFrame
 			}
 		};
 
-		MouseAdapter mouseAdapter = new MouseAdapter()
+		MouseAdapter myMouseAdapter = new MouseAdapter()
 		{
 			public void mouseMoved(MouseEvent e)
 			{
@@ -102,7 +102,7 @@ public class Leinwand extends JFrame
 			}
 		};
 
-		ComponentListener componentlister = new ComponentListener()
+		ComponentListener myComponentLister = new ComponentListener()
         {
            @Override
            public void componentHidden(ComponentEvent e)
@@ -123,20 +123,20 @@ public class Leinwand extends JFrame
            {}
         };
 
-		zeichenflaeche.addComponentListener(componentlister);
-		zeichenflaeche.addMouseListener(mouseAdapter);
-		zeichenflaeche.addMouseMotionListener(mouseAdapter);
-		zeichenflaeche.addMouseWheelListener(mouseWheel);
+		zeichenflaeche.addComponentListener(myComponentLister);
+		zeichenflaeche.addMouseListener(myMouseAdapter);
+		zeichenflaeche.addMouseMotionListener(myMouseAdapter);
+		zeichenflaeche.addMouseWheelListener(myMouseWheel);
 
-		setLayout(null);
-		setResizable(true);
-		setContentPane(zeichenflaeche);
-		setTitle(titel);
+		this.setLayout(null);
+		this.setResizable(true);
+		this.setContentPane(zeichenflaeche);
+		this.setTitle(titel);
 
 		zeichenflaeche.setPreferredSize(new Dimension(breite, hoehe));
 		hintergrundfarbe = grundfarbe;
 
-		pack();
+		this.pack();
 
 		figuren = new ArrayList<Object>();
 		figurZuShape = new HashMap<Object, ShapeMitFarbe>();
@@ -164,10 +164,9 @@ public class Leinwand extends JFrame
 		graphic = (Graphics2D) leinwandImage.getGraphics();
 		graphic.setColor(hintergrundfarbe);
 		graphic.fillRect(0, 0, size.width, size.height);
-		graphic.setColor(Color.black);
 		erneutZeichnen();
 
-    	setVisible(sichtbar);
+    	this.setVisible(sichtbar);
 	}
 
 	/**
@@ -195,7 +194,7 @@ public class Leinwand extends JFrame
 	{
     	figuren.remove(figur); // entfernen,falls schon eingetragen
     	figurZuShape.remove(figur);
-    	erneutZeichnen();
+    	this.erneutZeichnen();
 	}
 
 	public Color StringToColor(String color)
@@ -262,7 +261,7 @@ public class Leinwand extends JFrame
 	 */
 	private void erneutZeichnen()
 	{
-		loeschen();
+		this.loeschen();
 		for (Iterator i = figuren.iterator(); i.hasNext();)
 		{
 			((ShapeMitFarbe) figurZuShape.get(i.next())).draw(graphic);
@@ -271,7 +270,7 @@ public class Leinwand extends JFrame
 	}
 
 	/**
-	 * Lsche die gesamte Leinwand.
+	 * Loesche die gesamte Leinwand.
 	 */
 	private void loeschen()
 	{
@@ -284,11 +283,11 @@ public class Leinwand extends JFrame
 
 	public void resize()
 	{
-		setzeSichtbarkeit(true);
+		this.setzeSichtbarkeit(true);
 		this.setPreferredSize(new Dimension(getWidth(), getHeight()));
-		pack();
+		this.pack();
 
-		System.out.printf("--> resized window x:%d y:%d\n", getWidth(), getHeight());
+		System.out.printf("--> window: x:%4d y:%4d\n", getWidth(), getHeight());
 	}
 
 	/************************************************************************
