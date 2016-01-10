@@ -21,11 +21,11 @@ public class Gui
     private JMenu     BearbeitenMenu      = new JMenu("Bearbeiten");
     private JMenu     NewMenu             = new JMenu("Neu");
 	private JMenuItem BearbeitenNeueFarbe = new JMenuItem("Neue Farbe");
+    private JMenuItem BearbeitenDuplicate = new JMenuItem("Duplizieren");
     private JMenuItem BearbeitenLoeschen  = new JMenuItem("Objekt Loeschen");
     private JMenuItem BearbeitenDeleteBG  = new JMenuItem("Hintergrund Loeschen");
 
-    private String[] Moebel =
-    {
+    private String[] Moebel = {
         "Stuhl",
         "Tisch",
         "Bett",
@@ -97,65 +97,13 @@ public class Gui
         for (int z = 0; z < Moebel.length; z++)
         {
             Moebel_Items[z] = new JMenuItem(Moebel[z]);
-            ActionListener myAction = null;
-
-            switch (Moebel[z])
+            ActionListener myAction = new ActionListener()
             {
-                case "Stuhl":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Stuhl");
-                        }
-                    };
-                    break;
-                case "Tisch":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Tisch");
-                        }
-                    };
-                    break;
-                case "Bett":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Bett");
-                        }
-                    };
-                    break;
-                case "Schrank":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Schrank");
-                        }
-                    };
-                    break;
-                case "Schrankwand":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Schrankwand");
-                        }
-                    };
-                    break;
-                case "Sessel":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Sessel");
-                        }
-                    };
-                    break;
-            }
+                public void actionPerformed(ActionEvent evt)
+                {
+                    New_ActionPerformed(evt);
+                }
+            };
 
             Moebel_Items[z].addActionListener(myAction);
 
@@ -174,6 +122,23 @@ public class Gui
 			}
 		});
 		BearbeitenMenu.add(BearbeitenNeueFarbe);
+
+        BearbeitenDuplicate.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent evt)
+            {
+                try
+                {
+                    controller.duplicate();
+                }
+                catch(CloneNotSupportedException cnsE)
+                {
+                    cnsE.printStackTrace();
+                }
+            }
+        });
+
+        BearbeitenMenu.add(BearbeitenDuplicate);
 
         BearbeitenLoeschen.addActionListener(new ActionListener()
 		{
@@ -328,9 +293,10 @@ public class Gui
 	}
 
 	Controller controller = Controller.gibController();
-	public void New_ActionPerformed(String object)
+	public void New_ActionPerformed(ActionEvent evt)
 	{
-		controller.neu(object);
+        System.out.printf("--> add: %s\n", evt.getActionCommand());
+		controller.neu(evt.getActionCommand());
 	}
 
 	public void BearbeitenLoeschen_ActionPerformed(ActionEvent evt)
@@ -345,8 +311,7 @@ public class Gui
 
     private String ChooseColor()
     {
-        String[] farben =
-        {
+        String[] farben = {
             "schwarz",
             "rot",
             "blau",
@@ -356,8 +321,7 @@ public class Gui
             "weiss"
         };
 
-        String farbe = (String) JOptionPane.showInputDialog
-        (
+        String farbe = (String) JOptionPane.showInputDialog(
             null,
             "Choose now...",
             "Color",
@@ -393,8 +357,8 @@ public class Gui
                 {
                     try
                     {
-                        // Autosave delay: 15s
-                        Thread.sleep(15000);
+                        // Autosave delay: 20s
+                        Thread.sleep(20000);
                     }
                     catch (Exception e)
                     {}

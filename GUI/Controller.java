@@ -42,7 +42,7 @@ public class Controller
 		}
 	}
 
-	public String neu(String typ)
+	public void neu(String typ)
 	{
         Moebel neu = null;
 
@@ -67,13 +67,47 @@ public class Controller
         		neu = new Sessel();
     			break;
     		default:
-                return "keines";
+                return;
         }
 
 		moebel.add(neu);
 		neu.zeige();
-		ausgewaehlt = moebel.size()-1;
-		return ausgewaehltes().getClass().getName();
+		ausgewaehlt = moebel.size() - 1;
+	}
+
+	public void neuXY(String typ, int x, int y)
+	{
+		Moebel neu = null;
+
+		switch (typ)
+		{
+			case "Stuhl":
+				neu = new Stuhl();
+				break;
+			case "Tisch":
+				neu = new Tisch();
+				break;
+			case "Bett":
+				neu = new Bett();
+				break;
+			case "Schrank":
+				neu = new Schrank();
+				break;
+			case "Schrankwand":
+				neu = new Schrankwand();
+				break;
+			case "Sessel":
+				neu = new Sessel();
+				break;
+			default:
+				return;
+		}
+
+		neu.aenderePosition(x, y);
+		moebel.add(neu);
+		neu.zeige();
+		ausgewaehlt = moebel.size() - 1;
+		// return ausgewaehltes().getClass().getName();
 	}
 
 	public void waagerecht(String inhalt)
@@ -133,6 +167,23 @@ public class Controller
 		 }
 	}
 
+	public void duplicate() throws CloneNotSupportedException
+	{
+		if (ausgewaehlt >= 0)
+		{
+			System.out.println("--> Duplicate: " + ausgewaehltes().getClass().getName());
+
+			moebel.add(ausgewaehltes().clone());
+
+			ausgewaehlt = moebel.size() - 1;
+
+			ausgewaehltes().bewegeHorizontal(10);
+			ausgewaehltes().bewegeVertikal(10);
+
+			ausgewaehltes().zeige();
+		}
+	}
+
 	public void AlleLoeschen()
 	{
 		System.out.println("--> Clean backgroud: " + moebel.size() + " objects");
@@ -164,6 +215,7 @@ public class Controller
 			 yMaus = y;
 		}
 	}
+
 	public void angeklickt(int x, int y)
 	{
 		if (moebel.size() == 0) return;
@@ -176,6 +228,8 @@ public class Controller
 			 ausgewaehlt = i;
 			 xMaus = x;
 			 yMaus = y;
+
+			 return;
 		}
 	}
 

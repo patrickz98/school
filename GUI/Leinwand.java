@@ -1,20 +1,14 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Shape;
+import java.awt.*;
+import java.awt.event.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
-import java.awt.event.*;
 import java.io.*;
 
 /**
@@ -77,7 +71,27 @@ public class Leinwand extends JFrame
 
 			public void mouseClicked(MouseEvent e)
 			{
-				Controller.gibController().angeklickt(e.getX(), e.getY());
+				// SwingUtilities.isLeftMouseButton(MouseEvent anEvent)
+				// SwingUtilities.isRightMouseButton(MouseEvent anEvent)
+				// SwingUtilities.isMiddleMouseButton(MouseEvent anEvent)
+				if(SwingUtilities.isLeftMouseButton(e))
+				{
+					Controller.gibController().angeklickt(e.getX(), e.getY());
+				}
+
+				if(SwingUtilities.isRightMouseButton(e))
+				{
+					if (Controller.gibController().touched(e.getX(), e.getY()))
+					{
+						PopUp menu = new PopUp(true, e.getX(), e.getY());
+				        menu.show(e.getComponent(), e.getX(), e.getY());
+					}
+					else
+					{
+						PopUp menu = new PopUp(false, e.getX(), e.getY());
+				        menu.show(e.getComponent(), e.getX(), e.getY());
+					}
+				}
 			}
 
 			// jumping objects #bug
@@ -127,15 +141,14 @@ public class Leinwand extends JFrame
 		zeichenflaeche.addMouseListener(myMouseAdapter);
 		zeichenflaeche.addMouseMotionListener(myMouseAdapter);
 		zeichenflaeche.addMouseWheelListener(myMouseWheel);
+		zeichenflaeche.setPreferredSize(new Dimension(breite, hoehe));
+
+		hintergrundfarbe = grundfarbe;
 
 		this.setLayout(null);
 		this.setResizable(true);
 		this.setContentPane(zeichenflaeche);
 		this.setTitle(titel);
-
-		zeichenflaeche.setPreferredSize(new Dimension(breite, hoehe));
-		hintergrundfarbe = grundfarbe;
-
 		this.pack();
 
 		figuren = new ArrayList<Object>();
@@ -164,8 +177,8 @@ public class Leinwand extends JFrame
 		graphic = (Graphics2D) leinwandImage.getGraphics();
 		graphic.setColor(hintergrundfarbe);
 		graphic.fillRect(0, 0, size.width, size.height);
-		erneutZeichnen();
 
+		this.erneutZeichnen();
     	this.setVisible(sichtbar);
 	}
 
@@ -281,6 +294,35 @@ public class Leinwand extends JFrame
 		graphic.setColor(original);
 	}
 
+	String WindowText = "";
+
+	// Window text thread
+	protected Thread myWindowTextThread = new Thread(new Runnable() {
+		public void run()
+		{
+			setzeSichtbarkeit(true);
+			pack();
+
+			graphic.setColor(Color.black);
+			graphic.setFont(new Font("Ubuntu", Font.PLAIN, 36));
+			graphic.drawString(WindowText, 10, getHeight() - 70);
+
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (Exception e)
+			{}
+		}
+	});
+
+	// WindowText = "Add";
+	// if(!myWindowTextThread.isAlive())
+	// {
+	// 	myWindowTextThread.start();
+	// }
+
+
 	public void resize()
 	{
 		this.setzeSichtbarkeit(true);
@@ -325,6 +367,122 @@ public class Leinwand extends JFrame
 		{
 			setzeZeichenfarbe(farbe);
 			graphic.draw(shape);
+		}
+	}
+
+	class PopUp extends JPopupMenu
+	{
+		Controller controller = Controller.gibController();
+
+		private String[] Moebel = {
+			"Stuhl",
+			"Tisch",
+			"Bett",
+			"Schrank",
+			"Schrankwand",
+			"Sessel"
+		};
+		private JMenuItem[] Moebel_Items = new JMenuItem[Moebel.length];
+
+		private String[] farben = {
+            "schwarz",
+            "rot",
+            "blau",
+            "gelb",
+            "gruen",
+            "lila",
+            "weiss"
+        };
+		private JMenuItem[] Moebel_Colors = new JMenuItem[farben.length];
+
+		final int x;
+		final int y;
+
+	    public PopUp(boolean touched, int mx, int my)
+		{
+			this.x = mx;
+			this.y = my;
+
+			if(touched)
+			{
+				this.MoebelMenu();
+			}
+			else
+			{
+				this.addMoebel();
+			}
+	    }
+
+		protected void addMoebel()
+		{
+			for(int z = 0; z < Moebel.length; z++)
+			{
+				Moebel_Items[z] = new JMenuItem(Moebel[z]);
+
+				Moebel_Items[z].addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent evt)
+					{
+						controller.neuXY(evt.getActionCommand(), x, y);
+					}
+				});
+
+				this.add(Moebel_Items[z]);
+			}
+		}
+
+		protected void MoebelMenu()
+		{
+			JMenu farbenMenu = new JMenu("Farbe");
+
+			for(int z = 0; z < Moebel_Colors.length; z++)
+			{
+				Moebel_Colors[z] = new JMenuItem(farben[z]);
+
+				Moebel_Colors[z].addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent evt)
+					{
+						controller.aendereFarbe(evt.getActionCommand());
+					}
+				});
+
+				farbenMenu.add(Moebel_Colors[z]);
+			}
+
+			this.add(farbenMenu);
+
+			this.addSeparator();
+
+			JMenuItem duplicate = new JMenuItem("Duplizieren");
+
+			duplicate.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent evt)
+				{
+					try
+					{
+						controller.duplicate();
+					}
+					catch(CloneNotSupportedException cnsE)
+					{
+						cnsE.printStackTrace();
+					}
+				}
+			});
+			this.add(duplicate);
+
+			JMenuItem remove = new JMenuItem("Loeschen");
+
+			remove.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent evt)
+				{
+					controller.loeschen();
+				}
+			});
+
+			this.add(remove);
 		}
 	}
 }
