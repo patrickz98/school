@@ -3,51 +3,51 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.io.*;
-
-/**
-  *
-  * Beschreibung
-  *
-  * @version 1.0 vom 10.05.2011
-  * @author
-*/
+import java.util.ArrayList;
 
 public class Gui
 {
-    private JFrame myFrame;
+    private Leinwand myFrame = null;
 
 	private JMenuBar jmb = new JMenuBar();
 
-    private JMenu     jDateiMenu      = new JMenu("Datei");
-	private JMenuItem DateiJMenuItem1 = new JMenuItem("Oeffnen");
-	private JMenuItem DateiJMenuItem2 = new JMenuItem("Speichern");
-	private JMenuItem DateiJMenuItem3 = new JMenuItem("Beenden");
+    private JMenu     GuiMenu      = new JMenu("Gui");
+    private JMenuItem DateiBeenden = new JMenuItem("Beenden");
 
-    private JMenu jBearbeitenMenu = new JMenu("Bearbeiten");
+    private JMenu     DateiMenu      = new JMenu("Datei");
+	private JMenuItem DateiOeffnen   = new JMenuItem("Oeffnen");
+	private JMenuItem DateiSpeichern = new JMenuItem("Speichern");
 
-    private JMenu NewMenu = new JMenu("Neu");
-	// private JMenuItem BearbeitenJMenuItem1  = new JMenuItem("Stuhl");
-	// private JMenuItem BearbeitenJMenuItem2  = new JMenuItem("Tisch");
+    private JMenu     BearbeitenMenu      = new JMenu("Bearbeiten");
+    private JMenu     NewMenu             = new JMenu("Neu");
+	private JMenuItem BearbeitenNeueFarbe = new JMenuItem("Neue Farbe");
+    private JMenuItem BearbeitenDuplicate = new JMenuItem("Duplizieren");
+    private JMenuItem BearbeitenLoeschen  = new JMenuItem("Objekt Loeschen");
+    private JMenuItem BearbeitenDeleteBG  = new JMenuItem("Hintergrund Loeschen");
 
-	private JMenuItem BearbeitenJMenuItem8  = new JMenuItem("Loeschen");
-	private JMenuItem BearbeitenJMenuItem10 = new JMenuItem("neue Farbe");
+    private String[] Moebel = {
+        "Stuhl",
+        "Tisch",
+        "Bett",
+        "Schrank",
+        "Schrankwand",
+        "Sessel"
+    };
 
-    private String[] Moebel = {"Stuhl", "Tisch", "Bett", "Schrank", "Schrankwand", "Sessel"};
     private JMenuItem[] Moebel_Items = new JMenuItem[Moebel.length];
 
 	public Gui(String title)
 	{
-		// Frame-Initialisierung
-        // myFrame = new JFrame(title);
-        // myFrame = new Leinwand(title, 600, 500, Color.white);
-
         myFrame = Leinwand.gibLeinwand();
 
-		myFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-        // int frameWidth = 600;
-		// int frameHeight = 500;
-        // myFrame.setSize(frameWidth, frameHeight);
+		myFrame.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                exit(0);
+            }
+        });
 
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = (d.width - myFrame.getSize().width) / 2;
@@ -56,206 +56,319 @@ public class Gui
 
 		// Container cp = myFrame.getContentPane();
 		// cp.setLayout(null);
-		// Anfang Komponenten
 
 		myFrame.setJMenuBar(jmb);
-		jmb.add(jDateiMenu);
-		DateiJMenuItem1.addActionListener(new ActionListener()
+        jmb.add(GuiMenu);
+
+        //
+        // ################### Menu ###################
+        //
+
+		jmb.add(DateiMenu);
+		DateiOeffnen.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				DateiJMenuItem1_ActionPerformed(evt);
+				DateiOeffnen_ActionPerformed(evt);
 			}
 		});
-		jDateiMenu.add(DateiJMenuItem1);
+		DateiMenu.add(DateiOeffnen);
 
-		DateiJMenuItem2.addActionListener(new ActionListener()
+		DateiSpeichern.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				DateiJMenuItem2_ActionPerformed(evt);
+				DateiSpeichern_ActionPerformed(false);
 			}
 		});
-		jDateiMenu.add(DateiJMenuItem2);
+		DateiMenu.add(DateiSpeichern);
 
-		DateiJMenuItem3.addActionListener(new ActionListener()
+		DateiBeenden.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				DateiJMenuItem3_ActionPerformed(evt);
+				DateiBeenden_ActionPerformed(evt);
 			}
 		});
-		jDateiMenu.add(DateiJMenuItem3);
+		GuiMenu.add(DateiBeenden);
 
-		jmb.add(jBearbeitenMenu);
-
-// ###############
+		jmb.add(BearbeitenMenu);
 
         for (int z = 0; z < Moebel.length; z++)
         {
             Moebel_Items[z] = new JMenuItem(Moebel[z]);
-            ActionListener myAction = null;
-
-            switch (Moebel[z])
+            ActionListener myAction = new ActionListener()
             {
-                case "Stuhl":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Stuhl");
-                        }
-                    };
-                    break;
-                case "Tisch":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Tisch");
-                        }
-                    };
-                    break;
-                case "Bett":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Bett");
-                        }
-                    };
-                    break;
-                case "Schrank":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Schrank");
-                        }
-                    };
-                    break;
-                case "Schrankwand":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Schrankwand");
-                        }
-                    };
-                    break;
-                case "Sessel":
-                    myAction = new ActionListener()
-                    {
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            New_ActionPerformed("Sessel");
-                        }
-                    };
-                    break;
-            }
+                public void actionPerformed(ActionEvent evt)
+                {
+                    New_ActionPerformed(evt);
+                }
+            };
 
             Moebel_Items[z].addActionListener(myAction);
 
             NewMenu.add(Moebel_Items[z]);
         }
 
-// ###############
-        jBearbeitenMenu.add(NewMenu);
+        BearbeitenMenu.add(NewMenu);
 
-		jBearbeitenMenu.addSeparator();
-		BearbeitenJMenuItem8.addActionListener(new ActionListener()
+		BearbeitenMenu.addSeparator();
+
+		BearbeitenNeueFarbe.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				BearbeitenJMenuItem8_ActionPerformed(evt);
+				BearbeitenNeueFarbe_ActionPerformed(evt);
 			}
 		});
-		jBearbeitenMenu.add(BearbeitenJMenuItem8);
+		BearbeitenMenu.add(BearbeitenNeueFarbe);
 
+        BearbeitenDuplicate.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent evt)
+            {
+                try
+                {
+                    controller.duplicate();
+                }
+                catch(CloneNotSupportedException cnsE)
+                {
+                    cnsE.printStackTrace();
+                }
+            }
+        });
 
-		BearbeitenJMenuItem10.addActionListener(new ActionListener()
+        BearbeitenMenu.add(BearbeitenDuplicate);
+
+        BearbeitenLoeschen.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				BearbeitenJMenuItem10_ActionPerformed(evt);
+				BearbeitenLoeschen_ActionPerformed(evt);
 			}
 		});
-		jBearbeitenMenu.add(BearbeitenJMenuItem10);
+		BearbeitenMenu.add(BearbeitenLoeschen);
 
-		// Ende Komponenten
+        BearbeitenDeleteBG.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+				BearbeitenDeleteBG_ActionPerformed(evt);
+			}
+		});
+		BearbeitenMenu.add(BearbeitenDeleteBG);
 
-		myFrame.setResizable(false);
 		myFrame.setVisible(true);
 	}
 
-	// Anfang Methoden
-	public void DateiJMenuItem1_ActionPerformed(ActionEvent evt)
+    public String[] listdir(final File folder)
+    {
+        ArrayList<String> Files = new ArrayList<String>();
+
+        for (final File fileEntry: folder.listFiles())
+        {
+            if (fileEntry.isDirectory())
+            {
+                listdir(fileEntry);
+            }
+            else
+            {
+                if (fileEntry.getName().endsWith(".save"))
+                {
+                    Files.add(fileEntry.getName());
+                }
+            }
+        }
+
+        return Files.toArray(new String[Files.size()]);
+    }
+
+	public void DateiOeffnen_ActionPerformed(ActionEvent evt)
 	{
-		String dateiName = JOptionPane.showInputDialog(this, "Dateinamen eingeben\nleer: ausgabe.moe");
-		try
-		{
-				try
-				{
-						try
-                        {
-                            controller.holen(dateiName);
-						}
-                        catch (ClassNotFoundException e)
-                        {
-                            // JOptionPane.showMessageDialog(this, "Klasse gibt es nicht!");
-                        }
-				}
+        String[] choices = listdir(new File("."));
+
+        if (choices.length == 0)
+        {
+            System.err.println("++> no files available");
+            JOptionPane.showConfirmDialog(
+                null,
+                "no files available",
+                "Oeffnen",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+            return;
+        }
+
+        String dateiName = (String) JOptionPane.showInputDialog
+        (
+            null,
+            "Choose now...",
+            "Oeffnen",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            choices,
+            choices[0]
+        );
+
+        if ((dateiName != null) && (dateiName.length() > 0))
+        {
+            System.out.println("--> open: " + dateiName);
+
+            try
+    		{
+    			try
+    			{
+    			    try
+                    {
+                        controller.holen(dateiName);
+    				}
+                    catch (ClassNotFoundException e)
+                    {
+                        // wtf Klasse gibt es nicht?
+                        JOptionPane.showMessageDialog(null, "Klasse gibt es nicht!");
+                        System.err.println("++> DateiOeffnen_ActionPerformed: Klasse gibt es nicht!");
+                    }
+    			}
                 catch (FileNotFoundException e)
                 {
-                    // JOptionPane.showMessageDialog(this, "Datei nicht gefunden!");
+                    JOptionPane.showMessageDialog(null, "Datei nicht gefunden!");
+                    System.err.println("++> DateiOeffnen_ActionPerformed: Datei nicht gefunden!");
                 }
-		}
-        catch (IOException e)
+    		}
+            catch (IOException e)
+            {
+                JOptionPane.showMessageDialog(null, "E/A-Fehler!");
+                System.err.println("++> DateiOeffnen_ActionPerformed: IOException");
+            }
+        }
+        else
         {
-            // JOptionPane.showMessageDialog(this, "E/A-Fehler!");
+            System.err.println("++> no file select");
         }
 	}
 
-	public void DateiJMenuItem2_ActionPerformed(ActionEvent evt)
+	public void DateiSpeichern_ActionPerformed(boolean evt)
 	{
-		String dateiName=JOptionPane.showInputDialog(this, "Dateinamen eingeben\nleer: ausgabe.moe");
+        String dateiName = "default";
+        if (!evt)
+        {
+            dateiName = JOptionPane.showInputDialog("Datei", "default");
+
+            // Cancel evt
+            if (dateiName == null)
+            {
+                return;
+            }
+        }
+        else
+        {
+            dateiName = "autosave";
+        }
+
 		try
         {
-            controller.sichern(dateiName);
+            controller.sichern(dateiName + ".save");
+            System.out.printf("--> saved: %s.save\n", dateiName);
         }
 		catch (IOException e)
         {
-            // JOptionPane.showMessageDialog(this, "Datei nicht gefunden!");
+            System.err.println("++> DateiSpeichern_ActionPerformed: IOException");
         }
 	}
 
-	public void DateiJMenuItem3_ActionPerformed(ActionEvent evt)
+    public void exit(int status)
 	{
+        // last save
+        DateiSpeichern_ActionPerformed(true);
+
+        // exit
 		Leinwand lw = Leinwand.gibLeinwand();
 		lw.setzeSichtbarkeit(false);
-		System.exit(0);
+		System.exit(status);
+	}
+
+	public void DateiBeenden_ActionPerformed(ActionEvent evt)
+	{
+        exit(0);
 	}
 
 	Controller controller = Controller.gibController();
-	public void New_ActionPerformed(String object)
+	public void New_ActionPerformed(ActionEvent evt)
 	{
-		controller.neu(object);
+        System.out.printf("--> add: %s\n", evt.getActionCommand());
+		controller.neu(evt.getActionCommand());
 	}
 
-	public void BearbeitenJMenuItem8_ActionPerformed(ActionEvent evt)
+	public void BearbeitenLoeschen_ActionPerformed(ActionEvent evt)
 	{
 		controller.loeschen();
 	}
 
-	public void BearbeitenJMenuItem10_ActionPerformed(ActionEvent evt)
-	{
-		controller.aendereFarbe(JOptionPane.showInputDialog(this, "Farbe ?"));
-	}
+    public void BearbeitenDeleteBG_ActionPerformed(ActionEvent evt)
+    {
+        controller.AlleLoeschen();
+    }
 
-	// Ende Methoden
+    private String ChooseColor()
+    {
+        String[] farben = {
+            "schwarz",
+            "rot",
+            "blau",
+            "gelb",
+            "gruen",
+            "lila",
+            "weiss"
+        };
+
+        String farbe = (String) JOptionPane.showInputDialog(
+            null,
+            "Choose now...",
+            "Color",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            farben,
+            farben[0]
+        );
+
+        return farbe;
+    }
+
+	public void BearbeitenNeueFarbe_ActionPerformed(ActionEvent evt)
+	{
+        String farbe = ChooseColor();
+
+        if (farbe != null)
+        {
+            controller.aendereFarbe(farbe);
+        }
+	}
 
 	public static void main(String[] args)
 	{
-		new Gui("Gui");
+        final Gui myGui = new Gui("Gui");
+
+        // Autosave thead
+        Runnable myController = new Runnable()
+        {
+            public void run()
+            {
+                while (true)
+                {
+                    try
+                    {
+                        // Autosave delay: 20s
+                        Thread.sleep(20000);
+                    }
+                    catch (Exception e)
+                    {}
+
+                    myGui.DateiSpeichern_ActionPerformed(true);
+                }
+            }
+        };
+
+        Thread autosaveThread = new Thread(myController);
+        autosaveThread.start();
 	}
 }

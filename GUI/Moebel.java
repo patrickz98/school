@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author Claus Albowski
  * @version 2.2  (aug 07)
  */
-public abstract class Moebel implements Serializable
+public abstract class Moebel implements Serializable, Cloneable
 {
     protected int xPosition;
     protected int yPosition;
@@ -53,7 +53,7 @@ public abstract class Moebel implements Serializable
 
     protected Shape gibUmriss()
     {
-      Shape shape=gibAktuelleFigur();
+      Shape shape = gibAktuelleFigur();
       Rectangle2D umriss = shape.getBounds2D();
       return umriss;
     }
@@ -110,6 +110,14 @@ public abstract class Moebel implements Serializable
         zeichne();
     }
 
+    public void aenderePosition(int x, int y)
+    {
+        loesche();
+        xPosition = x;
+        yPosition = y;
+        zeichne();
+    }
+
     /**
      * Zeichne dieses Objekt mit seinen aktuellen Werten auf den Bildschirm.
      */
@@ -119,7 +127,7 @@ public abstract class Moebel implements Serializable
         {
             Shape figur = gibAktuelleFigur();
             Leinwand leinwand = Leinwand.gibLeinwand();
-            leinwand.zeichne (
+            leinwand.zeichne(
               this,           // leinwand kennt das Objekt
               farbe,          // definiert seine Zeichenfarbe
               figur);         // definiert seinen grafischen Aspekt
@@ -137,5 +145,20 @@ public abstract class Moebel implements Serializable
             Leinwand leinwand = Leinwand.gibLeinwand();
             leinwand.entferne(this);
         }
+    }
+
+    public int gibWinkel()
+    {
+        return orientierung;
+    }
+
+    public String gibFarbe()
+    {
+        return farbe;
+    }
+
+    public Moebel clone() throws CloneNotSupportedException
+    {
+        return (Moebel) super.clone();
     }
 }

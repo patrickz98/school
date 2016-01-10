@@ -20,8 +20,8 @@ public class Stuhl extends Moebel
     {
         xPosition = 60;
         yPosition = 100;
-        farbe = "blau";
-        orientierung = 270;
+        farbe = "schwarz";
+        orientierung = 0;
         istSichtbar = false;
         breite = 40;
         tiefe  = 40;
@@ -46,7 +46,7 @@ public class Stuhl extends Moebel
 
     /**
      * Berechnet das zu zeichnende Shape anhand der gegebenen Daten
-     * [ Zum Anzeigen der Attributwerte ber Inspect muss hier die Sichtbarkeit 
+     * [ Zum Anzeigen der Attributwerte ber Inspect muss hier die Sichtbarkeit
      *  auf public gesetzt werden. ]
      */
     protected Shape gibAktuelleFigur()

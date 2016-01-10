@@ -6,7 +6,13 @@ clean:
 	find . -name "*.jfm" -delete
 	find . -name "*.bluej" -delete
 	find . -name "*.~ava" -delete
-	find . -name "*.moe" -delete
+	# find . -name "*.save" -delete
 	find . -name ".DS_Store" -delete
 
-default: javac
+clean-save:
+	find . -name "*.save" -delete
+
+run: clean javac
+	java -cp . Gui
+
+default: run

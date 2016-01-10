@@ -22,6 +22,7 @@ public class Schrankwand extends Moebel
      */
      public Schrankwand()
      {
+         anzahl = 3;
          xPosition = 10;
          yPosition = 10;
          farbe = "schwarz";
@@ -29,7 +30,7 @@ public class Schrankwand extends Moebel
          istSichtbar = false;
          breite = anzahl*60;
          tiefe  = 37;
-         initSchraenke(3);
+         initSchraenke(anzahl);
      }
 
     public Schrankwand(int anzahl)
@@ -73,8 +74,8 @@ public class Schrankwand extends Moebel
      */
     private void initSchraenke(int anzahl)
     {
-        this.anzahl=anzahl;
-        schraenke=new ArrayList();
+        this.anzahl = anzahl;
+        schraenke = new ArrayList<Schrank>();
         for (int i=0; i<anzahl; i++)
         schraenke.add(new Schrank(i*breite/anzahl, 0, farbe, 0, breite/anzahl, tiefe));
     }
