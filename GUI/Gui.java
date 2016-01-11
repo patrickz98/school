@@ -20,6 +20,10 @@ public class Gui
 
     private JMenu     BearbeitenMenu      = new JMenu("Bearbeiten");
     private JMenu     NewMenu             = new JMenu("Neu");
+
+    private JMenuItem BearbeitenSort      = new JMenuItem("Sortieren");
+    private JMenuItem BearbeitenSortAll   = new JMenuItem("Alle Sortieren");
+
 	private JMenuItem BearbeitenNeueFarbe = new JMenuItem("Neue Farbe");
     private JMenuItem BearbeitenDuplicate = new JMenuItem("Duplizieren");
     private JMenuItem BearbeitenLoeschen  = new JMenuItem("Objekt Loeschen");
@@ -87,7 +91,7 @@ public class Gui
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				DateiBeenden_ActionPerformed(evt);
+				exit(0);
 			}
 		});
 		GuiMenu.add(DateiBeenden);
@@ -123,6 +127,28 @@ public class Gui
 		});
 		BearbeitenMenu.add(BearbeitenNeueFarbe);
 
+        BearbeitenMenu.addSeparator();
+
+        BearbeitenSort.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+				sortOne();
+			}
+		});
+		BearbeitenMenu.add(BearbeitenSort);
+
+        BearbeitenSortAll.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+				sortAll();
+			}
+		});
+		BearbeitenMenu.add(BearbeitenSortAll);
+
+        BearbeitenMenu.addSeparator();
+
         BearbeitenDuplicate.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent evt)
@@ -137,8 +163,9 @@ public class Gui
                 }
             }
         });
-
         BearbeitenMenu.add(BearbeitenDuplicate);
+
+        BearbeitenMenu.addSeparator();
 
         BearbeitenLoeschen.addActionListener(new ActionListener()
 		{
@@ -287,11 +314,6 @@ public class Gui
 		System.exit(status);
 	}
 
-	public void DateiBeenden_ActionPerformed(ActionEvent evt)
-	{
-        exit(0);
-	}
-
 	Controller controller = Controller.gibController();
 	public void New_ActionPerformed(ActionEvent evt)
 	{
@@ -344,12 +366,22 @@ public class Gui
         }
 	}
 
+    public void sortAll()
+    {
+        controller.sortAll(myFrame.getBounds());
+    }
+
+    public void sortOne()
+    {
+        controller.sortOne(myFrame.getBounds());
+    }
+
 	public static void main(String[] args)
 	{
         final Gui myGui = new Gui("Gui");
 
         // Autosave thead
-        Runnable myController = new Runnable()
+        Thread autosaveThread = new Thread(new Runnable()
         {
             public void run()
             {
@@ -366,9 +398,8 @@ public class Gui
                     myGui.DateiSpeichern_ActionPerformed(true);
                 }
             }
-        };
-
-        Thread autosaveThread = new Thread(myController);
+        });
+        
         autosaveThread.start();
 	}
 }

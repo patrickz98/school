@@ -1,6 +1,9 @@
 import java.util.*;
 import java.io.*;
 
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+
 public class Controller
 {
 	private static Controller controller = null;
@@ -22,7 +25,7 @@ public class Controller
 	private Controller()
 	{
 		moebel = new ArrayList<Moebel>();
-		ausgewaehlt = -1;
+		ausgewaehlt = 0;
 	}
 
 	private Moebel ausgewaehltes()
@@ -118,8 +121,11 @@ public class Controller
 
 	public void drehe(int input)
 	{
-		 int original = ausgewaehltes().gibWinkel();
-		 if (ausgewaehltes() != null) ausgewaehltes().dreheAuf(original + input);
+		if(ausgewaehlt > 0)
+		{
+			int original = ausgewaehltes().gibWinkel();
+			if (ausgewaehltes() != null) ausgewaehltes().dreheAuf(original + input);
+		}
 	}
 
 	public void aendereFarbe(String farbe)
@@ -162,7 +168,7 @@ public class Controller
 			 System.out.println("--> Delete: " + ausgewaehltes().getClass().getName());
 			 ausgewaehltes().verberge();
 			 moebel.remove(ausgewaehltes());
-			 if (moebel.size() == 0) ausgewaehlt = -1;
+			 if (moebel.size() == 0) ausgewaehlt = 0;
 			 else if (ausgewaehlt >= moebel.size()) ausgewaehlt = 0;
 		 }
 	}
@@ -193,6 +199,130 @@ public class Controller
 		}
 		moebel.clear();
 		ausgewaehlt = -1;
+	}
+
+	int delay = 10;
+	Rectangle frameSize = null;
+	int border = 20;
+
+	public void sort(int m, int delay)
+	{
+		int x = 1;
+
+		// Oben-Links
+		while(moebel.get(m).gibUmriss().getBounds2D().getX() < border &&
+			  moebel.get(m).gibUmriss().getBounds2D().getY() < border)
+		{
+			ausgewaehltes().bewegeHorizontal(x);
+			ausgewaehltes().bewegeVertikal(x);
+
+			warte(delay);
+			x++;
+		}
+
+		// Unten-Links
+		while(moebel.get(m).gibUmriss().getBounds2D().getX() < border &&
+			  moebel.get(m).gibUmriss().getBounds2D().getMaxY() > frameSize.height - border - 50)
+		{
+			ausgewaehltes().bewegeHorizontal(x);
+			ausgewaehltes().bewegeVertikal(-x);
+
+			warte(delay);
+			x++;
+		}
+
+		// Oben-Rechts
+		while(moebel.get(m).gibUmriss().getBounds2D().getMaxX() > frameSize.width - border &&
+			  moebel.get(m).gibUmriss().getBounds2D().getY() < border)
+		{
+			ausgewaehltes().bewegeHorizontal(-x);
+			ausgewaehltes().bewegeVertikal(x);
+
+			warte(delay);
+			x++;
+		}
+
+		// Unten-Rechts
+		while(moebel.get(m).gibUmriss().getBounds2D().getMaxX() > frameSize.width - border &&
+			  moebel.get(m).gibUmriss().getBounds2D().getMaxY() > frameSize.height - border - 50)
+		{
+			ausgewaehltes().bewegeHorizontal(-x);
+			ausgewaehltes().bewegeVertikal(-x);
+
+			warte(delay);
+			x++;
+		}
+
+		// Links
+		while(moebel.get(m).gibUmriss().getBounds2D().getX() < border)
+		{
+			ausgewaehltes().bewegeHorizontal(x);
+
+			warte(delay);
+			x++;
+		}
+
+		// Oben
+		while(moebel.get(m).gibUmriss().getBounds2D().getY() < border)
+		{
+			ausgewaehltes().bewegeVertikal(x);
+
+			warte(delay);
+			x++;
+		}
+
+		// Rechts
+		while(moebel.get(m).gibUmriss().getBounds2D().getMaxX() > frameSize.width - border)
+		{
+			ausgewaehltes().bewegeHorizontal(-x);
+
+			warte(delay);
+			x++;
+		}
+
+		// Unter
+		while(moebel.get(m).gibUmriss().getBounds2D().getMaxY() > frameSize.height - border - 50)
+		{
+			ausgewaehltes().bewegeVertikal(-x);
+
+			warte(delay);
+			x++;
+		}
+
+	}
+
+	public void sortAll(Rectangle size)
+	{
+		frameSize = size;
+
+		Thread mySortThread = new Thread(new Runnable()
+		{
+			public void run()
+			{
+				for(int m = 0; m < moebel.size(); m++)
+				{
+					ausgewaehlt = m;
+					sort(m, delay);
+				}
+			}
+		});
+
+		mySortThread.start();
+	}
+
+	public void sortOne(Rectangle size)
+	{
+		frameSize = size;
+
+		Thread mySortThread = new Thread(new Runnable()
+		{
+			public void run()
+			{
+				sort(ausgewaehlt, delay);
+			}
+		});
+
+		mySortThread.start();
 	}
 
 
@@ -324,5 +454,17 @@ public class Controller
 			 // wert bleibt -1
 		}
 		return wert;
+	}
+
+	public void warte(int millisekunden)
+	{
+		try
+		{
+			Thread.sleep(millisekunden);
+		}
+		catch (Exception e)
+		{
+			// Exception ignorieren
+		}
 	}
 }

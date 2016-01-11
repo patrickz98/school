@@ -131,7 +131,7 @@ public abstract class Moebel implements Serializable, Cloneable
               this,           // leinwand kennt das Objekt
               farbe,          // definiert seine Zeichenfarbe
               figur);         // definiert seinen grafischen Aspekt
-            leinwand.warte(10);
+            // leinwand.warte(10);
         }
     }
 
