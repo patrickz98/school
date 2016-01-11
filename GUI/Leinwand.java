@@ -322,6 +322,10 @@ public class Leinwand extends JFrame
 	// 	myWindowTextThread.start();
 	// }
 
+	public Rectangle mySize()
+	{
+		return this.getBounds();
+	}
 
 	public void resize()
 	{
@@ -429,6 +433,19 @@ public class Leinwand extends JFrame
 
 				this.add(Moebel_Items[z]);
 			}
+
+			this.addSeparator();
+
+			JMenuItem sort = new JMenuItem("Alle Sortieren");
+
+			sort.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent evt)
+				{
+					controller.sortAll(mySize());
+				}
+			});
+			this.add(sort);
 		}
 
 		protected void MoebelMenu()
@@ -451,6 +468,20 @@ public class Leinwand extends JFrame
 			}
 
 			this.add(farbenMenu);
+
+			this.addSeparator();
+
+			JMenuItem sort = new JMenuItem("Sortieren");
+
+			sort.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent evt)
+				{
+					controller.sortOne(mySize());
+				}
+			});
+			this.add(sort);
+
 
 			this.addSeparator();
 
