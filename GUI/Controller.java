@@ -14,11 +14,6 @@ public class Controller
 		return controller;
 	}
 
-    public static void beenden()
-	{
-		Leinwand.gibLeinwand().setzeSichtbarkeit(false);
-	}
-
 	private ArrayList<Moebel> moebel = null;
 	private int ausgewaehlt;
 
@@ -45,40 +40,7 @@ public class Controller
 		}
 	}
 
-	public void neu(String typ)
-	{
-        Moebel neu = null;
-
-        switch (typ)
-        {
-            case "Stuhl":
-    			neu = new Stuhl();
-    			break;
-            case "Tisch":
-                neu = new Tisch();
-                break;
-            case "Bett":
-    			neu = new Bett();
-    			break;
-            case "Schrank":
-    			neu = new Schrank();
-    			break;
-            case "Schrankwand":
-    			neu = new Schrankwand();
-    			break;
-            case "Sessel":
-        		neu = new Sessel();
-    			break;
-    		default:
-                return;
-        }
-
-		moebel.add(neu);
-		neu.zeige();
-		ausgewaehlt = moebel.size() - 1;
-	}
-
-	public void neuXY(String typ, int x, int y)
+	protected Moebel StringToMoebel(String typ)
 	{
 		Moebel neu = null;
 
@@ -102,29 +64,36 @@ public class Controller
 			case "Sessel":
 				neu = new Sessel();
 				break;
-			default:
-				return;
 		}
+
+		return neu;
+	}
+
+	public void neu(String typ)
+	{
+		Moebel neu = StringToMoebel(typ);
+
+		moebel.add(neu);
+		neu.zeige();
+		ausgewaehlt = moebel.size() - 1;
+	}
+
+	public void neuXY(String typ, int x, int y)
+	{
+		Moebel neu = StringToMoebel(typ);
 
 		neu.aenderePosition(x, y);
 		moebel.add(neu);
 		neu.zeige();
 		ausgewaehlt = moebel.size() - 1;
-		// return ausgewaehltes().getClass().getName();
-	}
-
-	public void waagerecht(String inhalt)
-	{
-		 int weite = StringToInt(inhalt);
-		 if (ausgewaehltes() != null) ausgewaehltes().bewegeHorizontal(weite);
 	}
 
 	public void drehe(int input)
 	{
-		if(ausgewaehlt > 0)
+		if(ausgewaehltes() != null)
 		{
 			int original = ausgewaehltes().gibWinkel();
-			if (ausgewaehltes() != null) ausgewaehltes().dreheAuf(original + input);
+			ausgewaehltes().dreheAuf(original + input);
 		}
 	}
 
@@ -136,36 +105,10 @@ public class Controller
 		}
 	}
 
-    public String voriges()
-	{
-		String aktuell = "keines";
-
-		if (moebel.size() > 0)
-		{
-			ausgewaehlt--;
-			if (ausgewaehlt < 0) ausgewaehlt = moebel.size() - 1;
-			aktuell = ausgewaehltes().getClass().getName();
-		}
-		return aktuell;
-	}
-
-	public String naechstes()
-	{
-		String aktuell = "keines";
-		if (moebel.size() > 0)
-		{
-			ausgewaehlt++;
-			if (ausgewaehlt >= moebel.size()) ausgewaehlt = 0;
-			aktuell = ausgewaehltes().getClass().getName();
-		}
-		return aktuell;
-	}
-
 	public void loeschen()
 	{
 		 if (ausgewaehlt >= 0)
 		 {
-			 System.out.println("--> Delete: " + ausgewaehltes().getClass().getName());
 			 ausgewaehltes().verberge();
 			 moebel.remove(ausgewaehltes());
 			 if (moebel.size() == 0) ausgewaehlt = 0;
@@ -177,8 +120,6 @@ public class Controller
 	{
 		if (ausgewaehlt >= 0)
 		{
-			System.out.println("--> Duplicate: " + ausgewaehltes().getClass().getName());
-
 			moebel.add(ausgewaehltes().clone());
 
 			ausgewaehlt = moebel.size() - 1;
@@ -190,21 +131,11 @@ public class Controller
 		}
 	}
 
-	public void AlleLoeschen()
-	{
-		System.out.println("--> Clean backgroud: " + moebel.size() + " objects");
-		for (Iterator<Moebel> i = moebel.iterator(); i.hasNext();)
-		{
-			i.next().verberge();
-		}
-		moebel.clear();
-		ausgewaehlt = -1;
-	}
-
 	int delay = 10;
 	Rectangle frameSize = null;
 	int border = 20;
 
+	// function which moves the Moebels in visible
 	public void sort(int m, int delay)
 	{
 		int x = 1;
@@ -243,6 +174,7 @@ public class Controller
 		}
 
 		// Unten-Rechts
+		// border is wrong because of the JMenuBar --> -50
 		while(moebel.get(m).gibUmriss().getBounds2D().getMaxX() > frameSize.width - border &&
 			  moebel.get(m).gibUmriss().getBounds2D().getMaxY() > frameSize.height - border - 50)
 		{
@@ -281,6 +213,7 @@ public class Controller
 		}
 
 		// Unter
+		// border is wrong because of the JMenuBar --> -50
 		while(moebel.get(m).gibUmriss().getBounds2D().getMaxY() > frameSize.height - border - 50)
 		{
 			ausgewaehltes().bewegeVertikal(-x);
@@ -288,13 +221,13 @@ public class Controller
 			warte(delay);
 			x++;
 		}
-
 	}
 
 	public void sortAll(Rectangle size)
 	{
 		frameSize = size;
 
+		// sort Thread for all object
 		Thread mySortThread = new Thread(new Runnable()
 		{
 			public void run()
@@ -314,6 +247,7 @@ public class Controller
 	{
 		frameSize = size;
 
+		// sort Thread for one object
 		Thread mySortThread = new Thread(new Runnable()
 		{
 			public void run()
@@ -331,10 +265,10 @@ public class Controller
 	 */
 	private int xMaus = 0;
 	private int yMaus = 0;
-    public void mausposition(int x, int y)
+	public void mausposition(int x, int y)
 	{
 		if (moebel.size() == 0) return;
-        for (int i = 0; i < moebel.size(); i++)
+		for (int i = 0; i < moebel.size(); i++)
 		if ((x > moebel.get(i).gibUmriss().getBounds2D().getX()) &&
 			(x < moebel.get(i).gibUmriss().getBounds2D().getMaxX()) &&
 			(y > moebel.get(i).gibUmriss().getBounds2D().getY()) &&
@@ -371,89 +305,76 @@ public class Controller
 		yMaus = y;
 	}
 
-    public boolean touched(int x, int y)
-    {
-        if (moebel.size() == 0) return false;
+	public boolean touched(int x, int y)
+	{
+		if (moebel.size() == 0) return false;
 		for (int i = 0; i < moebel.size(); i++)
 		if ((x > moebel.get(i).gibUmriss().getBounds2D().getX()) &&
 			(x < moebel.get(i).gibUmriss().getBounds2D().getMaxX()) &&
 			(y > moebel.get(i).gibUmriss().getBounds2D().getY()) &&
 			(y < moebel.get(i).gibUmriss().getBounds2D().getMaxY()))
 		{
-            return true;
+			return true;
 		}
-        return false;
-    }
+		return false;
+	}
 
-	/**
-	 * Dateizugriff Speichern
-	 */
+	// save
 	public void sichern(String dateiName)
 	throws IOException, FileNotFoundException
 	{
-		if (dateiName.equals("")) dateiName = "default.save";
+		// if (dateiName.equals("")) dateiName = "default.save";
+		if (dateiName.equals("")) return;
 
-        ObjectOutputStream ausgabe = new ObjectOutputStream(new FileOutputStream(dateiName));
+		ObjectOutputStream ausgabe = new ObjectOutputStream(new FileOutputStream(dateiName));
 
-        for (int i = 0; i < moebel.size(); i++)
-        {
-            ausgabe.writeObject(moebel.get(i));
-        }
+		for (int i = 0; i < moebel.size(); i++)
+		{
+			ausgabe.writeObject(moebel.get(i));
+		}
 
-        ausgabe.close();
+		ausgabe.close();
 	}
 
+	// open
 	public void holen(String dateiName)
 	throws ClassNotFoundException, IOException, FileNotFoundException
 	{
-		if (dateiName.equals("")) dateiName = "default.save";
+		// if (dateiName.equals("")) dateiName = "default.save";
+		if (dateiName.equals("")) return;
 
-        for (int i = 0; i < moebel.size(); i++)
-        {
-            // Vorhandenes loeschen
-            moebel.get(i).verberge();
-        }
+		for (int i = 0; i < moebel.size(); i++)
+		{
+			// Vorhandenes loeschen
+			moebel.get(i).verberge();
+		}
 
 		moebel.clear();
-		ausgewaehlt = -1;
+		ausgewaehlt = 0;
 
-        ObjectInputStream eingabe = new ObjectInputStream( new FileInputStream(dateiName));
+		ObjectInputStream eingabe = new ObjectInputStream( new FileInputStream(dateiName) );
 		Moebel obj = null;
 		boolean fertig = false;
 
-        while (!fertig)
+		while (!fertig)
 		{
 			try
-            {
-                obj = (Moebel) eingabe.readObject();
-            }
+			{
+				obj = (Moebel) eingabe.readObject();
+			}
 			catch (EOFException e)
-            {
-                fertig = true;
-            }
+			{
+				fertig = true;
+			}
 
-            if (!fertig)
+			if (!fertig)
 			{
 				moebel.add(obj);
-				obj.verberge(); // notwendig um zunaechst das Attribut sichtbar auf false zu setzen
+				obj.verberge();
 				obj.zeige();
 			}
 		}
 		eingabe.close();
-	}
-
-	public int StringToInt(String inhalt)
-	{
-		int wert = -1;
-		try
-		{
-        	wert = Integer.parseInt(inhalt);
-		}
-		catch (NumberFormatException e)
-		{
-			 // wert bleibt -1
-		}
-		return wert;
 	}
 
 	public void warte(int millisekunden)

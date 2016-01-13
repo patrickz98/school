@@ -3,12 +3,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
-/**
- * Die Klasse Moebel definiert die gemeinsamen Eigenschaften aller Mbelklassen.
- *
- * @author Claus Albowski
- * @version 2.2  (aug 07)
- */
 public abstract class Moebel implements Serializable, Cloneable
 {
     protected int xPosition;
@@ -18,9 +12,6 @@ public abstract class Moebel implements Serializable, Cloneable
     protected boolean istSichtbar;
     protected int breite;
     protected int tiefe;
-
-    // Kein Konstruktor !!!!
-
 
     /**
      * Diese Methode ist der Kern der Abstraktion.
@@ -47,15 +38,20 @@ public abstract class Moebel implements Serializable, Cloneable
         AffineTransform t = new AffineTransform();
         t.translate(xPosition, yPosition);
         Rectangle2D umriss = shape.getBounds2D();
-        t.rotate(Math.toRadians(orientierung),umriss.getX()+umriss.getWidth()/2,umriss.getY()+umriss.getHeight()/2);
+        t.rotate(Math.toRadians(orientierung),
+                 umriss.getX() +
+                 umriss.getWidth() / 2,
+                 umriss.getY() +
+                 umriss.getHeight() / 2);
+
         return  t.createTransformedShape(shape);
     }
 
     protected Shape gibUmriss()
     {
-      Shape shape = gibAktuelleFigur();
-      Rectangle2D umriss = shape.getBounds2D();
-      return umriss;
+        Shape shape = gibAktuelleFigur();
+        Rectangle2D umriss = shape.getBounds2D();
+        return umriss;
     }
 
     /**
@@ -67,9 +63,6 @@ public abstract class Moebel implements Serializable, Cloneable
         istSichtbar = false;
     }
 
-    /**
-     * Drehe auf den angegebenen Winkel
-     */
     public void dreheAuf(int neuerWinkel)
     {
         loesche();
@@ -77,9 +70,6 @@ public abstract class Moebel implements Serializable, Cloneable
         zeichne();
     }
 
-    /**
-     * Bewege dieses Objekt horizontal um 'entfernung' Bildschirmpunkte.
-     */
     public void bewegeHorizontal(int entfernung)
     {
         loesche();
@@ -87,9 +77,6 @@ public abstract class Moebel implements Serializable, Cloneable
         zeichne();
     }
 
-    /**
-     * Bewege dieses objekt vertikal um 'entfernung' Bildschirmpunkte.
-     */
     public void bewegeVertikal(int entfernung)
     {
         loesche();
@@ -97,12 +84,6 @@ public abstract class Moebel implements Serializable, Cloneable
         zeichne();
     }
 
-
-    /**
-     * Aendere die Farbe dieses Objektes in 'neueFarbe'.
-     * Gueltige Angaben sind "rot", "gelb", "blau", "gruen",
-     * "lila" und "schwarz".
-     */
     public void aendereFarbe(String neueFarbe)
     {
         loesche();
@@ -131,16 +112,12 @@ public abstract class Moebel implements Serializable, Cloneable
               this,           // leinwand kennt das Objekt
               farbe,          // definiert seine Zeichenfarbe
               figur);         // definiert seinen grafischen Aspekt
-            // leinwand.warte(10);
         }
     }
 
-    /**
-     * Loesche dieses Objekt vom Bildschirm.
-     */
     private void loesche()
     {
-        if (istSichtbar)
+        if(istSichtbar)
         {
             Leinwand leinwand = Leinwand.gibLeinwand();
             leinwand.entferne(this);
@@ -152,11 +129,7 @@ public abstract class Moebel implements Serializable, Cloneable
         return orientierung;
     }
 
-    public String gibFarbe()
-    {
-        return farbe;
-    }
-
+    // clone object: "Duplizieren" event
     public Moebel clone() throws CloneNotSupportedException
     {
         return (Moebel) super.clone();

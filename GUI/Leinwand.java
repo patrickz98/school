@@ -40,7 +40,8 @@ public class Leinwand extends JFrame
 	private List<Object> figuren;
 	private Map<Object, ShapeMitFarbe> figurZuShape; // Abbildung von Figuren zu Shapes
 
-	private boolean jumping_contorl = false;
+	// fix jumping objects
+	private boolean jumping_controll = false;
 
 	/**
 	 * Erzeuge eine Leinwand.
@@ -54,88 +55,92 @@ public class Leinwand extends JFrame
 		super(titel);
 		zeichenflaeche = new Zeichenflaeche();
 
+		// MouseWheel Event
 		MouseWheelListener myMouseWheel = new MouseWheelListener()
 		{
 			public void mouseWheelMoved(MouseWheelEvent e)
 			{
+				// turn
 				Controller.gibController().drehe(e.getWheelRotation() * 2);
 			}
 		};
 
+		// MouseAdapter Event
 		MouseAdapter myMouseAdapter = new MouseAdapter()
 		{
+			// fix jumping objects
 			public void mouseMoved(MouseEvent e)
 			{
-				jumping_contorl = false;
+				jumping_controll = false;
 			}
 
 			public void mouseClicked(MouseEvent e)
 			{
-				// SwingUtilities.isLeftMouseButton(MouseEvent anEvent)
-				// SwingUtilities.isRightMouseButton(MouseEvent anEvent)
-				// SwingUtilities.isMiddleMouseButton(MouseEvent anEvent)
+				// left click
 				if(SwingUtilities.isLeftMouseButton(e))
 				{
 					Controller.gibController().angeklickt(e.getX(), e.getY());
 				}
 
+				// right click
 				if(SwingUtilities.isRightMouseButton(e))
 				{
+					// PopUp: true --> inside; false --> outside
 					if (Controller.gibController().touched(e.getX(), e.getY()))
 					{
 						PopUp menu = new PopUp(true, e.getX(), e.getY());
-				        menu.show(e.getComponent(), e.getX(), e.getY());
+						menu.show(e.getComponent(), e.getX(), e.getY());
 					}
 					else
 					{
 						PopUp menu = new PopUp(false, e.getX(), e.getY());
-				        menu.show(e.getComponent(), e.getX(), e.getY());
+						menu.show(e.getComponent(), e.getX(), e.getY());
 					}
 				}
 			}
 
-			// jumping objects #bug
 			public void mouseDragged(MouseEvent e)
 			{
-				// System.out.println("--> mouseDragged");
-				if (Controller.gibController().touched(e.getX(), e.getY()) || jumping_contorl)
+				// fix jumping objects
+				if (Controller.gibController().touched(e.getX(), e.getY()) || jumping_controll)
 				{
 					Controller.gibController().verschiebeAuf(e.getX(), e.getY());
-					jumping_contorl = true;
+					jumping_controll = true;
 				}
 				else
 				{
-					jumping_contorl = false;
+					jumping_controll = false;
 				}
 			}
 
 			public void mousePressed(MouseEvent e)
 			{
-				// System.out.println("--> mousePressed");
 				Controller.gibController().mausposition(e.getX(), e.getY());
 			}
 		};
 
+		// Rezie Event
 		ComponentListener myComponentLister = new ComponentListener()
-        {
-           @Override
-           public void componentHidden(ComponentEvent e)
-           {}
+		{
+			@Override
+			public void componentHidden(ComponentEvent e)
+			{}
 
-           @Override
-           public void componentMoved(ComponentEvent e)
-           {}
+			@Override
+			public void componentMoved(ComponentEvent e)
+			{}
 
-           @Override
-           public void componentResized(ComponentEvent e)
-           {
-               resize();
-           }
+			@Override
+			public void componentResized(ComponentEvent e)
+			{
+				// Autoresize
+				resize();
+			}
 
-           @Override
-           public void componentShown(ComponentEvent e)
-           {}
-        };
+			@Override
+			public void componentShown(ComponentEvent e)
+			{}
+		};
 
 		zeichenflaeche.addComponentListener(myComponentLister);
 		zeichenflaeche.addMouseListener(myMouseAdapter);
@@ -155,23 +160,13 @@ public class Leinwand extends JFrame
 		figurZuShape = new HashMap<Object, ShapeMitFarbe>();
 	}
 
-	/**
-	 * Setze, ob diese Leinwand sichtbar sein soll oder nicht. Wenn die
-	 * Leinwand sichtbar gemacht wird, wird ihr	in den
-	 * Vordergrund geholt. Diese Operation kann auch benutzt werden, um
-	 * ein bereits sichtbares Leinwand in den Vordergrund (vor
-	 * andere ) zu holen.
-	 * @param sichtbar boolean fr die gewnschte Sichtbarkeit:
-	 * true fr sichtbar, false fr nicht sichtbar.
-	 */
 	public void setzeSichtbarkeit(boolean sichtbar)
 	{
 		// removed if-loop to make the jframe resizable
     	// if (graphic == null)
     	// {}
 
-		// erstmaliger Aufruf: erzeuge das Bildschirm-Image und fuelle
-		// es mit der Hintergrundfarbe
+		// background fill
 		Dimension size = zeichenflaeche.getSize();
 		leinwandImage = zeichenflaeche.createImage(getWidth(), getHeight());
 		graphic = (Graphics2D) leinwandImage.getGraphics();
@@ -182,30 +177,17 @@ public class Leinwand extends JFrame
     	this.setVisible(sichtbar);
 	}
 
-	/**
-	 * Zeichne fr das gegebene Figur-Objekt eine Java-Figur (einen Shape)
-	 * auf die Leinwand.
-	 * @param	figur	das Figur-Objekt, fr das ein Shape gezeichnet
-	 *				 werden soll
-	 * @param	farbe	die Farbe der Figur
-	 * @param	shape	ein Objekt der Klasse Shape, das tatschlich
-	 *				 gezeichnet wird
-	 */
 	public void zeichne(Object figur, String farbe, Shape shape)
 	{
-    	figuren.remove(figur); // entfernen, falls schon eingetragen
-    	figuren.add(figur); // am Ende hinzufgen
+    	figuren.remove(figur);
+    	figuren.add(figur);
     	figurZuShape.put(figur, new ShapeMitFarbe(shape, farbe));
     	erneutZeichnen();
 	}
 
-	/**
-	 * Entferne die gegebene Figur von der Leinwand.
-	 * @param	figur	die Figur, deren Shape entfernt werden soll
-	 */
 	public void entferne(Object figur)
 	{
-    	figuren.remove(figur); // entfernen,falls schon eingetragen
+    	figuren.remove(figur);
     	figurZuShape.remove(figur);
     	this.erneutZeichnen();
 	}
@@ -236,37 +218,18 @@ public class Leinwand extends JFrame
 			case "weiss":
 				newColor = Color.white;
 				break;
+			case "orange":
+				newColor = Color.orange;
+				break;
 			default:
 				newColor = Color.black;
 		}
 		return newColor;
 	}
 
-	/**
-	 * Setze die Zeichenfarbe der Leinwand.
-	 * @param	farbname der Name der neuen Zeichenfarbe.
-	 */
 	public void setzeZeichenfarbe(String farbname)
 	{
 		graphic.setColor(StringToColor(farbname));
-	}
-
-	/**
-	 * Warte fr die angegebenen Millisekunden.
-	 * Mit dieser Operation wird eine Verzgerung definiert, die
-	 * fr animierte Zeichnungen benutzt werden kann.
-	 * @param	millisekunden die zu wartenden Millisekunden
-	 */
-	public void warte(int millisekunden)
-	{
-		try
-		{
-			Thread.sleep(millisekunden);
-		}
-		catch (Exception e)
-		{
-			// Exception ignorieren
-		}
 	}
 
 	/**
@@ -285,7 +248,7 @@ public class Leinwand extends JFrame
 	/**
 	 * Loesche die gesamte Leinwand.
 	 */
-	private void loeschen()
+	public void loeschen()
 	{
 		Color original = graphic.getColor();
 		graphic.setColor(hintergrundfarbe);
@@ -294,35 +257,8 @@ public class Leinwand extends JFrame
 		graphic.setColor(original);
 	}
 
-	String WindowText = "";
-
-	// Window text thread
-	protected Thread myWindowTextThread = new Thread(new Runnable() {
-		public void run()
-		{
-			setzeSichtbarkeit(true);
-			pack();
-
-			graphic.setColor(Color.black);
-			graphic.setFont(new Font("Ubuntu", Font.PLAIN, 36));
-			graphic.drawString(WindowText, 10, getHeight() - 70);
-
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch (Exception e)
-			{}
-		}
-	});
-
-	// WindowText = "Add";
-	// if(!myWindowTextThread.isAlive())
-	// {
-	// 	myWindowTextThread.start();
-	// }
-
-	public Rectangle mySize()
+	// return Frame size for the sorting funcs.
+	public Rectangle myFrameSize()
 	{
 		return this.getBounds();
 	}
@@ -337,9 +273,9 @@ public class Leinwand extends JFrame
 	}
 
 	/************************************************************************
-	 * Interne Klasse Zeichenflaeche - die Klasse fr die GUI-Komponente,
+	 * Interne Klasse Zeichenflaeche - die Klasse fuer die GUI-Komponente,
 	 * die tatschlich im Leinwand-Fenster angezeigt wird. Diese Klasse
-	 * definiert ein JPanel mit der zustzlichen Mglichkeit, das auf ihm
+	 * definiert ein JPanel mit der zustzlichen Moeglichkeit, das auf ihm
 	 * gezeichnet Image aufzufrischen (erneut zu zeichnen).
 	 */
 	private class Zeichenflaeche extends JPanel
@@ -354,7 +290,7 @@ public class Leinwand extends JFrame
 	 * Interne Klasse ShapeMitFarbe - Da die Klasse Shape des JDK nicht auch
 	 * eine Farbe mitverwalten kann, muss mit dieser Klasse die Verknpfung
 	 * modelliert werden.
-	 * graphic.fill() durch graphic.draw() ersetzt von Uwe Debacher am 5.12.2003
+	 * graphic.fill() durch graphic.draw()
 	 */
 	private class ShapeMitFarbe
 	{
@@ -374,6 +310,7 @@ public class Leinwand extends JFrame
 		}
 	}
 
+	// right click view
 	class PopUp extends JPopupMenu
 	{
 		Controller controller = Controller.gibController();
@@ -389,14 +326,15 @@ public class Leinwand extends JFrame
 		private JMenuItem[] Moebel_Items = new JMenuItem[Moebel.length];
 
 		private String[] farben = {
-            "schwarz",
-            "rot",
-            "blau",
-            "gelb",
-            "gruen",
-            "lila",
-            "weiss"
-        };
+			"schwarz",
+			"rot",
+			"blau",
+			"gelb",
+			"gruen",
+			"lila",
+			"weiss",
+			"orange"
+		};
 		private JMenuItem[] Moebel_Colors = new JMenuItem[farben.length];
 
 		final int x;
@@ -407,6 +345,7 @@ public class Leinwand extends JFrame
 			this.x = mx;
 			this.y = my;
 
+			// true --> inside (Object Options); false --> everything else
 			if(touched)
 			{
 				this.MoebelMenu();
@@ -436,13 +375,13 @@ public class Leinwand extends JFrame
 
 			this.addSeparator();
 
-			JMenuItem sort = new JMenuItem("Alle Sortieren");
+			JMenuItem sort = new JMenuItem("Alle Aufraeumen");
 
 			sort.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent evt)
 				{
-					controller.sortAll(mySize());
+					controller.sortAll(myFrameSize());
 				}
 			});
 			this.add(sort);
@@ -452,6 +391,7 @@ public class Leinwand extends JFrame
 		{
 			JMenu farbenMenu = new JMenu("Farbe");
 
+			// Colors
 			for(int z = 0; z < Moebel_Colors.length; z++)
 			{
 				Moebel_Colors[z] = new JMenuItem(farben[z]);
@@ -469,20 +409,21 @@ public class Leinwand extends JFrame
 
 			this.add(farbenMenu);
 
+			// ---------------
 			this.addSeparator();
 
-			JMenuItem sort = new JMenuItem("Sortieren");
+			JMenuItem sort = new JMenuItem("Aufraeumen");
 
 			sort.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent evt)
 				{
-					controller.sortOne(mySize());
+					controller.sortOne(myFrameSize());
 				}
 			});
 			this.add(sort);
 
-
+			// ---------------
 			this.addSeparator();
 
 			JMenuItem duplicate = new JMenuItem("Duplizieren");
@@ -509,7 +450,7 @@ public class Leinwand extends JFrame
 			{
 				public void actionPerformed(ActionEvent evt)
 				{
-					controller.loeschen();
+					loeschen();
 				}
 			});
 
