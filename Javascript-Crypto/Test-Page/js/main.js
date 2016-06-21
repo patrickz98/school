@@ -1,0 +1,6 @@
+Main = {};
+
+Main.init = function()
+{
+    
+}
