@@ -166,9 +166,9 @@ WebCryptographyAPI.main = function()
 {
     console.log("Start");
 
-    var passwd      = "patrick1234";
+    var passwd      = "28051998PZ";
     var data        = "Hallo Welt!";
-    var encryptData = "wotmwrTDm8KfYMKCGMKGO2TDo8K8R8OhUMKNMMK3Z8OwW3nDt8KhQMOJB3fDtCpe";
+    var encryptData = "RltEayHDtCbCosO8ScKZO1vCj8K1wq5AKcO1w5BHwqlTFMKlwrHDoRgzw7VWwpw";
 
     document.body.innerHTML  = "<p>passwd: " + passwd + "</p>";
     document.body.innerHTML += "<p>data:   " + data   + "</p>";
