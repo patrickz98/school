@@ -1,8 +1,0 @@
-#BlueJ class context
-comment0.params=x\ y\ f\ o\ b\ t
-comment0.target=Schrank(int,\ int,\ java.lang.String,\ int,\ int,\ int)
-comment0.text=\n\ Erzeuge\ einen\ neuen\ Schrank.\n
-comment1.params=
-comment1.target=java.awt.Shape\ gibAktuelleFigur()
-comment1.text=\n\ Berechnet\ das\ zu\ zeichnende\ Shape\ anhand\ der\ gegebenen\ Daten\n
-numComments=2

@@ -1,8 +1,0 @@
-#BlueJ class context
-comment0.params=
-comment0.target=couch()
-comment0.text=\n\ Erzeuge\ einen\ neue\ couch\ mit\ einer\ Standardfarbe\ und\ Standardgroesse\n\ an\ einer\ Standardposition.\ (Standardkonstruktor)\n
-comment1.params=
-comment1.target=java.awt.Shape\ gibAktuelleFigur()
-comment1.text=\n\ Berechnet\ das\ zu\ zeichnende\ Shape\ anhand\ der\ gegebenen\ Daten\n\ [\ Zum\ Anzeigen\ der\ Attributwerte\ \uFFFDber\ Inspect\ muss\ hier\ die\ Sichtbarkeit\ \n\ \ auf\ public\ gesetzt\ werden.\ ]\n
-numComments=2
